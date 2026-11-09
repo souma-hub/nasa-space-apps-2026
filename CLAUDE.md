@@ -1,0 +1,22 @@
+# nasa-space-apps-2026
+
+NASA Space Apps Challenge 2026（2026-11-14〜15）の練習と本番用のリポジトリ。GitHub の非公開リポジトリ souma-hub/nasa-space-apps-2026 として管理する。
+
+## 構成
+- `README.md`: 練習する API の一覧と状況（提供状況は 2026-11-09 時点）、スクリプトの使い方
+- `REMOTE.md`: 外出先から Claude Code を使うためのガイド（中学生向け）
+- `apod.py`: APOD（毎日の天文写真）を取得して表示する
+- `neows.py`: NeoWs（地球に近づく小惑星）を取得して表にする
+- `nasa_common.py`: API キーの読み込みや出力の UTF-8 固定など、共通処理
+- `.env.example`: `.env` の書き方の見本（本物の `.env` はコミットしない）
+
+## ルール
+- API キーは `.env` か環境変数 `NASA_API_KEY` に置く。絶対にコミットしない
+- スクリプトは `uv run xxx.py` で実行する（PEP 723 のヘッダで依存を解決する）
+- 新しい API を使う前に、提供状況を確認する（README の状況欄を参照）
+- 出力の文字化け対策は nasa_common.py の reconfigure に依存している。新しいスクリプトでも使うこと
+- クラウドセッションでは `~/.claude/settings.json` の deny ルールが効かない。外部への送信には特に注意する
+- 回答・出力は日本語で行う
+
+## push 前の確認
+- コミットの author / committer のメールアドレスが `294825900+souma-hub@users.noreply.github.com` であることを確認する
