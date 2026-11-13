@@ -18,5 +18,6 @@ NASA Space Apps Challenge 2026（2026-11-14〜15）の練習と本番用のリ�
 - クラウドセッションでは `~/.claude/settings.json` の deny ルールが効かない。外部への送信には特に注意する
 - 回答・出力は日本語で行う
 
-## push 前の確認
+## push の方針
+- 非公開リポジトリなので、コミットしたらすぐ push する（特にドキュメント）。デスクトップ PC が落ちても、クラウドセッションで続きをやれるようにするため
 - コミットの author / committer のメールアドレスが `294825900+souma-hub@users.noreply.github.com` であることを確認する
