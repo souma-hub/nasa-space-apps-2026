@@ -22,6 +22,8 @@ NASA Space Apps Challenge 2026（2026-11-14〜15）の練習と本番用のリ�
 - `fetch_geos_forecast.py`: NASA GEOS-FP の予報（1 時間ごとの雨・10 m 風速）を範囲で取得する
 - `analyze_early_harvest.py`: 過去の台風で、NASA のデータの規則なら、しなくてよい早刈りを何回減らせたかを数える
 - `analyze_enso.py`: エルニーニョ・ラニーニャ（ONI）と、倒伏の条件に当たった台風の年ごとの数の関係を検定する
+- `lodging_model.py`: 軽量な倒伏予測モデル（雨 × 実り具合の規則と、表示用のロジスティック回帰。品種別）
+- `predict_lodging.py`: NASA のデータを取りに行き「刈る／待ってよい」を出す（`--replay 日付` で過去の台風を再現）
 - `analyze_episodes.py`: 嵐ごとに、倒伏の報告がある嵐の位置と検定を出す
 - `results/`: 解析結果の図とレポート
 - `data/`: 取得したデータ（コミットしない）
