@@ -25,6 +25,7 @@ NASA Space Apps Challenge 2026（2026-11-14〜15）の練習と本番用のリ�
 - `lodging_model.py`: 軽量な倒伏予測モデル（雨 × 実り具合の規則と、表示用のロジスティック回帰。品種別）
 - `predict_lodging.py`: NASA のデータを取りに行き「刈る／待ってよい」を出す（`--replay 日付` で過去の台風を再現）
 - `review_lodging_model.py`: 茨城・千葉モデルのレビュー（基準・期間を変えた頑健性、並べ替え検定、未知の台風）
+- `analyze_japan.py`: 全国の都道府県×台風で、解析（被害あり／なしの比較）とモデルの比較（台風を 1 つずつ抜く交差検証）をする
 - `analyze_episodes.py`: 嵐ごとに、倒伏の報告がある嵐の位置と検定を出す
 - `build_japan_dataset.py`: 全国版の学習用データ「都道府県 × 台風」（2004〜2021 年 8〜9 月、500 km 以内）を作る。水稲被害面積と IMERG の雨・POWER の気温と風を付けて `data/japan_typhoon_dataset.csv` に保存
 - `results/`: 解析結果の図とレポート
