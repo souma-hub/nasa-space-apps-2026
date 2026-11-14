@@ -1,28 +1,28 @@
 # チーム登録用ディスクリプション
 
-選択チャレンジ: Be An Earth System Trend Detective!
-対象地域: 日本（広すぎる場合は関東地方に絞る）
+選択チャレンジ: Field Shift
+対象地域: 日本（関東地方南部＝茨城・千葉を中心に）
 
 ## 日本語版
 
-友人の米農家が、強風と大雨で稲が倒れる「倒伏」の被害を受けたことがきっかけです。倒伏は収量と品質を大きく下げますが、農家は被害が出てから気づくことが多く、事前に備える手段がほとんどありません。
+友人の米農家が、台風と大雨で稲が倒れる「倒伏」の被害を受けたことがきっかけです。農家は台風の警報が出ると、まだ実りきっていなくても安全側で早めに刈り取ります。しかし、そのうち実際に被害が出る台風は一部で、早刈りは収量と品質を捨てる判断でもあります。「待つか、刈るか」を決める客観的な材料が、現場にはほとんどありません。
 
-私たちは日本の水田を対象に、NASA の衛星データと気象データを使って、次の 3 つに取り組みます。
+私たちは、NASA の地球観測・予報データ（GPM IMERG、GEOS-FP、POWER）と、農水省の被害統計、農家の知見を組み合わせて、次の 3 つに取り組みます。
 
-1. 衛星画像（雲を通す SAR や光学画像）から、稲が倒れたかどうかを判定できるかを検証し、倒れた時期を推定する。
-2. 倒れた時期と倒れなかった時期で、風速・降水量・継続時間に統計的に有意な差があるかを検定し、倒伏と関係する気象条件を明らかにする。
-3. 有意だった変数を使い、農家のスマートフォンや小さな端末でも動く軽量な予測モデルを作り、倒伏の危険を事前に知らせる。
+1. 台風・大雨の予報が出たとき、稲が倒れる条件（雨量と、稲の実り具合＝出穂後の積算気温）に当たるかを判定する、軽量なモデルを作る。農家の判断を置き換えるのではなく、「刈る／待ってよい」の材料を出す。
+2. 過去の台風で検証し、被害が出る台風を見逃さずに、しなくてよい早刈りをどれだけ減らせるかを、限界（台風の数が少ない、統計が風水害の合計であること）も含めて正直に示す。
+3. 予測と結果の履歴を蓄積し、品種・田植え日・輪作といった作付計画の意思決定支援へ広げる道筋を示す。
 
-統計解析を軸に、「何が本当に倒伏と関係しているのか」を数字で示し、農家が使える形に落とし込むことを目指します。まずは日本に絞り、範囲が広すぎる場合は関東地方に絞って進めます。
+NASA のデータは学習にも使い、GPU のない普通のパソコンで動く軽さを保ちます。まず収穫判断を支援する土台を作り、将来の作付計画の比較につなげることを目指します。
 
 ## English version
 
-Our project started with a friend who farms rice in Japan and lost part of a crop to lodging, where rice plants are flattened by strong wind and heavy rain. Lodging cuts both yield and quality, yet farmers usually notice it only after the damage is done and have few ways to prepare in advance.
+Our project started with a friend who farms rice in Japan and lost part of a crop to lodging, where rice plants are flattened by typhoon wind and heavy rain. When a typhoon warning is issued, farmers usually harvest early to be safe, even before the crop is fully ripe. But only some of those typhoons actually cause damage, and harvesting early gives up yield and quality. Farmers have almost no objective evidence to decide whether to wait or to harvest.
 
-Focusing on rice paddies in Japan, we will use NASA satellite and weather data to do three things:
+Combining NASA Earth observation and forecast data (GPM IMERG, GEOS-FP, POWER) with damage statistics from Japan's Ministry of Agriculture and farmers' local knowledge, we will do three things:
 
-1. Test whether satellite imagery, including radar (SAR) that sees through clouds and optical imagery, can tell lodged rice from standing rice, and estimate when the lodging happened.
-2. Test whether wind speed, rainfall, and storm duration differ significantly between periods with and without lodging, to identify the weather conditions that are actually linked to it.
-3. Use the variables that turn out to be significant to build a lightweight prediction model that can run on a farmer's smartphone or other small device and warn of lodging risk ahead of time.
+1. Build a lightweight model that tells, when a typhoon or heavy rain is forecast, whether conditions match those under which rice lodges (rainfall and crop ripeness, measured as accumulated temperature after heading). It does not replace the farmer's judgment; it provides evidence for "harvest now" or "safe to wait."
+2. Test it on past typhoons and show honestly how many unnecessary early harvests it could have avoided without missing damaging storms, including its limits (few typhoons, and statistics that combine wind and flood damage).
+3. Accumulate a history of predictions and outcomes, and outline how it can grow into decision support for crop planning: variety, planting date, and rotation.
 
-Our approach is built on statistical analysis: we want to show with numbers what truly drives lodging, and turn that into a tool farmers can use. We will start with Japan and narrow our scope to the Kanto region if Japan proves too broad.
+NASA data is used for training, and the model is light enough to run on an ordinary computer without a GPU. We start with a foundation for harvest decisions and aim to extend it to comparing planting strategies in the future.
