@@ -15,7 +15,7 @@ NASA Space Apps Challenge 2026（2026-11-14〜15）の練習と本番用のリ�
 - `analyze_threshold.py`: 倒伏あり／報告なしの日で気象を検定し、閾値の材料を出す
 - `fetch_amedas.py`: 気象庁アメダス 7 地点の日別値（最大瞬間風速など）を `data/` に保存する
 - `fetch_maff_damage.py`: 農水省の作物統計から、茨城・千葉の水稲の風水害被害（年別）を集める
-- `fetch_disaster_damage.py`: 農水省「農作物災害種類別被害統計」から、災害ごとの茨城・千葉の水稲被害を集める（被害なしの災害も分かる）
+- `fetch_disaster_damage.py`: 農水省「農作物災害種類別被害統計」から、災害ごとの茨城・千葉の水稲被害を集める（被害なしの災害も分かる）。`--all-prefs` で全都道府県、`--offline` でキャッシュだけから作り直す
 - `fetch_imerg.py`: NASA GPM IMERG（日別 0.1°）を OPeNDAP で範囲だけ切り出す（Earthdata のトークンが必要）
 - `phenology.py`: NASA POWER の気温から、品種ごとの出穂日・出穂後積算気温・倒れやすい田の割合を推定する
 - `analyze_disasters.py`: 災害統計を正解にして、嵐ごとに雨・風・生育段階との関係を検定する
@@ -26,6 +26,7 @@ NASA Space Apps Challenge 2026（2026-11-14〜15）の練習と本番用のリ�
 - `predict_lodging.py`: NASA のデータを取りに行き「刈る／待ってよい」を出す（`--replay 日付` で過去の台風を再現）
 - `review_lodging_model.py`: 茨城・千葉モデルのレビュー（基準・期間を変えた頑健性、並べ替え検定、未知の台風）
 - `analyze_episodes.py`: 嵐ごとに、倒伏の報告がある嵐の位置と検定を出す
+- `build_japan_dataset.py`: 全国版の学習用データ「都道府県 × 台風」（2004〜2021 年 8〜9 月、500 km 以内）を作る。水稲被害面積と IMERG の雨・POWER の気温と風を付けて `data/japan_typhoon_dataset.csv` に保存
 - `results/`: 解析結果の図とレポート
 - `data/`: 取得したデータ（コミットしない）
 - `apod.py`: APOD（毎日の天文写真）を取得して表示する
