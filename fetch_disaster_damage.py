@@ -93,20 +93,47 @@ def parse_sheet(df):
     return year, name, table, rice_col is not None, out
 
 
+def download(c, sid, cache):
+    """ファイルを取る。data/estat_cache に保存し、2 回目からはそれを使う。接続エラーは再試行する。"""
+    f = cache / f"{sid}.bin"
+    if f.exists():
+        return f.read_bytes()
+    for i in range(5):
+        try:
+            r = c.get(DOWNLOAD, params={"statInfId": sid, "fileKind": 0})
+            r.raise_for_status()
+            f.write_bytes(r.content)
+            time.sleep(0.4)
+            return r.content
+        except httpx.HTTPError as e:
+            print(f"  {sid} 再試行 {i + 1}: {e}", file=sys.stderr)
+            time.sleep(2 ** i)
+    return None
+
+
 def main():
     p = argparse.ArgumentParser(description="災害ごとの水稲被害（茨城・千葉）を集める")
     p.add_argument("--only", nargs="*", help="tclass3 を限定（試験用）")
     p.add_argument("--out", default="data/disaster_damage.csv")
     a = p.parse_args()
     rows = []
+    cache = Path("data/estat_cache")
+    cache.mkdir(parents=True, exist_ok=True)
     with httpx.Client(timeout=60, follow_redirects=True) as c:
-        ids = list_ids(c, a.only)
+        for i in range(5):
+            try:
+                ids = list_ids(c, a.only)
+                break
+            except httpx.HTTPError as e:
+                print(f"  一覧の再試行 {i + 1}: {e}", file=sys.stderr)
+                time.sleep(2 ** i)
         print(f"表のファイル: {len(ids)} 個", flush=True)
         for n, sid in enumerate(ids, 1):
-            r = c.get(DOWNLOAD, params={"statInfId": sid, "fileKind": 0})
-            time.sleep(0.4)
+            content = download(c, sid, cache)
+            if content is None:
+                continue
             try:
-                sheets = pd.read_excel(io.BytesIO(r.content), sheet_name=None, header=None)
+                sheets = pd.read_excel(io.BytesIO(content), sheet_name=None, header=None)
             except Exception:
                 continue
             for df in sheets.values():
