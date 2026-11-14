@@ -38,7 +38,7 @@ Next: comparing planting choices, for any region and crop.
 | 2 | 4–10 | 同じ写真を暗くして文字 | Typhoon forecast → harvest now, or wait? No clear rule. |
 | 3 | 10–15 | 文字カード（入力を並べる） | NASA GPM IMERG rain · NASA POWER wind & temperature |
 | 4 | 15–21 | 大きな数字 | 10 / 16 safe to wait · 1 / 7 missed (23 past typhoons) |
-| 5 | 21–25 | `assets/demo.png`（＋あれば Pico の LED 実写） | Runs on a laptop or a Raspberry Pi Pico |
+| 5 | 21–25 | `assets/demo.png` → `assets/pico_led.mp4`（LED 実写） | Runs on a laptop or a Raspberry Pi Pico |
 | 6 | 25–29.5 | `assets/frog.jpg` | NASA data for harvest decision support · Voice: AI-generated (TTS) |
 
 - 文字カードの配色はスライドに合わせる: 背景 #fbfaf6、文字 #1d1b19、強調 #b3261e、セリフ体見出し
@@ -54,7 +54,7 @@ Next: comparing planting choices, for any region and crop.
 - `assets/field.jpg`: 田んぼの写真（オーナー撮影、EXIF 除去済み）
 - `assets/frog.jpg`: 稲とカエルの写真（同上）
 - `assets/demo.png`: デモ画面（docs/demo/index.html、1366×768）。必要なら headless ブラウザで撮り直してよい
-- Pico の LED 実写: 未撮影。オーナーが撮れたら追加
+- `assets/pico_led.mp4`: Pico H の LED 実写（オーナー撮影の切り抜き 8.3 秒、30fps、Pico 周辺を 2 倍に拡大、音声と位置情報などのメタデータは除去済み）。2 秒ごとに 点灯→点灯→消灯→… と変わる。5 カット目で点灯→消灯が 1 回映る 4 秒を使う
 
 ## 確認
 - 長さ 30 秒以内（`ffprobe` で確認）、音声と字幕のずれがない、数字がスライドと一致
