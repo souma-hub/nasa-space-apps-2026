@@ -357,7 +357,9 @@ def main():
     print(df.groupby("year").agg(rows=("pref", "size"), damaged=("damaged", "sum"),
                                  typhoons=("typhoon_num", "nunique")).to_string())
     print("\n欠損の数:")
-    print(df.isna().sum()[lambda s: s > 0].to_string() or "なし")
+    na = df.drop(columns=["damage_source"]).isna().sum()
+    print(na[na > 0].to_string() if (na > 0).any() else "なし")
+    print(f"damage_source が空（統計に当たらず rice_ha = 0 とした行）: {int((df.damage_source == '').sum())}")
 
 
 if __name__ == "__main__":
