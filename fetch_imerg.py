@@ -64,6 +64,7 @@ def fetch_one(c, day, url, product):
                 d = xr.open_dataset(f.name)
                 v = d["precipitation"].values.astype("float64")
                 units = d["precipitation"].attrs.get("units", "")
+                d.close()
             v[v < 0] = np.nan
             if "hr" in units:  # 日別でも単位が mm/hr（1 日の平均強度）の場合は mm/day に直す
                 v = v * 24
