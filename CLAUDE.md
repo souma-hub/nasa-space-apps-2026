@@ -7,6 +7,8 @@ NASA Space Apps Challenge 2026（2026-11-14〜15）の練習と本番用のリ�
 - `REMOTE.md`: 外出先から Claude Code を使うためのガイド（中学生向け）
 - `PLAN.md`: 本番のタイムテーブル、Claude の利用リソース、進め方（SDD・仮）
 - `TEAM.md`: チーム登録用のディスクリプション（日本語版と英語版）
+- `lodging_s1.py`: Sentinel-1 で水田の倒伏前後の変化を、前年同期と比べる
+- `results/`: 解析結果の図
 - `apod.py`: APOD（毎日の天文写真）を取得して表示する
 - `neows.py`: NeoWs（地球に近づく小惑星）を取得して表にする
 - `nasa_common.py`: API キーの読み込みや出力の UTF-8 固定など、共通処理
