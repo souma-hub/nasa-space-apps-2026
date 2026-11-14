@@ -94,15 +94,11 @@ def parse_sheet(df, prefs=PREFS, year_hint=None):
     ev = next((t for t in raw if "による農作物被害" in t or re.search(r"の農作物被害$", t)), None)
     table = clean(title)
     name = clean(re.sub(r"^[\d０-９]+[\s\u3000]+", "", ev)) if ev else table
-    # 作物名の行と、水稲の列を探す
-    rice_col = None
-    for i in range(min(20, len(df))):
-        for j, v in enumerate(df.iloc[i].tolist()):
-            if RICE.match(clean(v)):
-                rice_col = j
-                break
-        if rice_col is not None:
-            break
+    # 作物名の行と、水稲の列を探す。2004 年の表は左上の見出し（都道府県名の列の上）にも「水陸稲」と
+    # 書いてあるので、都道府県名が並ぶ列は除く（以前はその列を拾い、被害面積がすべて 0 になっていた）
+    pref_cols = {j for _, row in df.iterrows() for j, v in enumerate(row.tolist()) if clean(v) in prefs}
+    rice_col = next((j for i in range(min(20, len(df))) for j, v in enumerate(df.iloc[i].tolist())
+                     if RICE.match(clean(v)) and j not in pref_cols), None)
     out = {}
     for _, row in df.iterrows():
         cells = [clean(v) for v in row.tolist()]
