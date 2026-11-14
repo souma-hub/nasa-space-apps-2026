@@ -65,7 +65,7 @@ def main():
             print(f"  {len(feats):,} / {len(ids):,}", end="\r", flush=True)
     out = Path(a.out)
     out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text(json.dumps({"type": "FeatureCollection", "features": feats}))
+    out.write_text(json.dumps({"type": "FeatureCollection", "features": feats}), encoding="utf-8")
     print(f"\n保存: {out}（{out.stat().st_size / 1e6:.1f} MB）")
 
 

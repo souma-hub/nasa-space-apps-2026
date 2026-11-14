@@ -52,12 +52,12 @@ def fit_logistic(csv="results/early_harvest_typhoons.csv", out=COEF_PATH):
     m = LogisticRegression(C=1.0).fit(x, y)
     coef = {"intercept": float(m.intercept_[0]), "log1p_rain": float(m.coef_[0][0]),
             "in_window": float(m.coef_[0][1]), "n": int(len(y)), "n_damage": int(y.sum())}
-    out.write_text(json.dumps(coef, ensure_ascii=False, indent=2))
+    out.write_text(json.dumps(coef, ensure_ascii=False, indent=2), encoding="utf-8")
     return coef
 
 
 def probability(rain_mm, gdd, coef=None):
-    c = coef or json.loads(COEF_PATH.read_text())
+    c = coef or json.loads(COEF_PATH.read_text(encoding="utf-8"))
     z = (c["intercept"] + c["log1p_rain"] * np.log1p(rain_mm)
          + c["in_window"] * float(GDD <= gdd < GDD_HARVESTED))
     return float(1 / (1 + np.exp(-z)))

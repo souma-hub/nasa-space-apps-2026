@@ -95,6 +95,11 @@ def loo(nat, kt):
     return yk, out, harvest, np.array(coefs)
 
 
+# 閾値の安全マージン: 閾値は「被害ありの確率の最小値」＝境界の確率そのものなので、
+# 単精度 float（Pico）や JS で p >= thr が割れないよう、保存時に 0.999 倍しておく（全経路がこの保存値を使う）
+THR_MARGIN = 0.999
+
+
 def export(full, w, nat, kt, off, out=Path("results/unified_model.json")):
     """実行時（lodging_unified.py）に使う係数と閾値を JSON に保存する。numpy だけで動かせるように。"""
     import json
@@ -112,18 +117,18 @@ def export(full, w, nat, kt, off, out=Path("results/unified_model.json")):
         "wind": {"mu": float(full.mu[1]), "sd": float(full.sd[1]), "coef": float(coef[1])},
         "pref": {p: float(c) for p, c in zip(full.prefs, coef[2:])},
         # 全国の閾値: 学習データの被害ありの 95% を拾う確率
-        "threshold_national": float(np.quantile(p_nat[y_nat == 1], 0.05)),
+        "threshold_national": float(np.quantile(p_nat[y_nat == 1], 0.05)) * THR_MARGIN,
         "local": {
             "茨城・千葉": {"prefs": list(LOCAL_PREFS), "d": float(w[0]), "e_ripe": float(w[1]),
                          "gdd_window": [GDD, GDD_HARVESTED],
                          # 地域の閾値: 茨城・千葉の台風で被害ありの見逃し 0 になる最大の確率
-                         "threshold": float(p_loc[y_loc == 1].min()),
+                         "threshold": float(p_loc[y_loc == 1].min()) * THR_MARGIN,
                          "n_typhoons": int(len(kt)), "n_damage": int(y_loc.sum())},
         },
         "trained_on": {"national_rows": int(len(nat)), "national_damage": int(y_nat.sum()),
                        "national_typhoons": int(nat.tid.nunique()), "years": "2004-2021, 8-9 月"},
     }
-    out.write_text(json.dumps(params, ensure_ascii=False, indent=2))
+    out.write_text(json.dumps(params, ensure_ascii=False, indent=2), encoding="utf-8")
     print(f"保存: {out}（全国の閾値 {params['threshold_national']:.3f}、"
           f"茨城・千葉の閾値 {params['local']['茨城・千葉']['threshold']:.3f}）")
 

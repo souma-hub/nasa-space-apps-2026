@@ -25,7 +25,7 @@ VARIETY_JA = {"koshihikari": "コシヒカリ", "akitakomachi": "あきたこま
 
 
 def load(path=PARAMS):
-    return json.loads(Path(path).read_text())
+    return json.loads(Path(path).read_text(encoding="utf-8"))
 
 
 def local_for(pref, P):

@@ -83,7 +83,7 @@ main()
 
 
 def main():
-    P = json.loads(Path("results/unified_model.json").read_text())
+    P = json.loads(Path("results/unified_model.json").read_text(encoding="utf-8"))
     keep = {k: P[k] for k in ("intercept", "rain", "wind", "pref", "threshold_national")}
     keep["local"] = {k: {kk: v[kk] for kk in ("prefs", "d", "e_ripe", "gdd_window", "threshold")}
                      for k, v in P["local"].items()}

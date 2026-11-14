@@ -165,7 +165,7 @@ function decide(D,pref,rainPast,rainForecast,wind,gdd,variety){
     reasons.push("実り具合はこの県では使わない（品種・作付け時期の前提がないため、全国の部分だけで判断）");
   }
   const p=1/(1+Math.exp(-z));
-  const harvest=p>=thr-1e-12; // Python（numpy）と最後の桁がずれても、閾値ちょうどの境界例で判断が割れないように
+  const harvest=p>=thr; // 閾値は保存時に 0.999 倍済み（unified_model.py）。境界の確率とは離れている
   return {harvest:harvest,decision:harvest?"刈る":"待ってよい",probability:p,threshold:thr,reasons:reasons,effRain:rain,useLocal:useLocal};
 }
 </script>

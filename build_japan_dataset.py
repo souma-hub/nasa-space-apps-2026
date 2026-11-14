@@ -84,7 +84,7 @@ def read_tracks(path=Path("data/bst_all.txt")):
         z = zipfile.ZipFile(io.BytesIO(httpx.get(BST, timeout=120).content))
         path.write_bytes(z.read("bst_all.txt"))
     rows, cur = [], None
-    for line in path.read_text().splitlines():
+    for line in path.read_text(encoding="utf-8").splitlines():
         if line.startswith("66666"):
             cur = line[6:10]  # YYNN（NN が台風番号）
             continue

@@ -41,7 +41,7 @@ def best_track(cache=Path("data/bst_all.txt")):
         z = zipfile.ZipFile(io.BytesIO(httpx.get(BST, timeout=120).content))
         cache.write_bytes(z.read("bst_all.txt"))
     rows, cur = [], None
-    for line in cache.read_text().splitlines():
+    for line in cache.read_text(encoding="utf-8").splitlines():
         if line.startswith("66666"):
             cur = line[6:10]  # YYNN
             continue
