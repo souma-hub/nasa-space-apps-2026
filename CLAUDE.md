@@ -26,6 +26,7 @@ NASA Space Apps Challenge 2026（2026-11-14〜15）の練習と本番用のリ�
 - `unified_model.py`: 統一モデル（全国の雨＋風＋県の補正 ＋ 茨城・千葉の実り具合）を学習・検証し、`results/unified_model.json` に保存する
 - `lodging_unified.py`: 統一モデルの実行時の部分（numpy だけ）。`decide()` で「刈る／待ってよい」を出す
 - `demo_lodging.py`: 統一モデルのデモ（架空の台風のシナリオ、または入力した条件で判断。ネット不要）
+- `make_pico.py`: 統一モデルの係数を埋め込んだ Raspberry Pi Pico 用の MicroPython プログラム `pico/main.py` を作る（手順は `docs/pico.md`）
 - `predict_lodging.py`: NASA のデータ（GEOS-FP の雨と風、IMERG、POWER）を取りに行き、統一モデルで「刈る／待ってよい」を出す（`--pref 茨城|千葉`、`--replay 日付` で過去の台風を再現）
 - `review_lodging_model.py`: 茨城・千葉モデルのレビュー（基準・期間を変えた頑健性、並べ替え検定、未知の台風）
 - `analyze_japan.py`: 全国の都道府県×台風で、解析（被害あり／なしの比較）とモデルの比較（台風を 1 つずつ抜く交差検証）をする
