@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pico で判断</title>
+<!-- 画面は命令を送って結果を出すだけ。判断と LED は Pico 側（pico/serial_main.py または pico/demo_main.py を main.py として保存済み）。
+     Edge / Chrome（Windows 10 以降、ドライバ不要）で file:// のまま開ける。外部ライブラリなし、オフライン動作。 -->
+<style>
+:root{--bg:#f5f6f8;--panel:#fff;--ink:#1f2933;--sub:#52606d;--line:#d9dee3;--accent:#1f5fa8;--red:#c0392b;--redbg:#fbeceb;--green:#2e7d32;--greenbg:#e8f3e9}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,"Hiragino Sans","Yu Gothic UI","Meiryo",sans-serif;font-variant-numeric:tabular-nums;}
+html{font-size:min(1.1vw,1.9vh)}
+header{display:flex;align-items:center;gap:1rem;padding:.6rem 1.2rem;background:#fff;border-bottom:1px solid var(--line)}
+header h1{margin:0;font-size:1.8rem}
+header .st{color:var(--sub);font-size:.9rem}
+main{display:grid;grid-template-columns:5fr 7fr;gap:.8rem;padding:.8rem 1.2rem}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:.8rem 1rem}
+h2{margin:0 0 .5rem;font-size:1.1rem;color:var(--sub)}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-bottom:.6rem}
+label{display:block;font-size:.95rem;color:var(--sub)}
+select,input[type=number]{width:100%;font:inherit;padding:.3rem;color:var(--ink)}
+button{font:inherit;padding:.6rem 1.2rem;border:1px solid var(--accent);background:var(--accent);color:#fff;border-radius:4px;cursor:pointer}
+button:disabled{opacity:.4;cursor:default}
+.tabs{display:flex;gap:.5rem;padding:.6rem 1.2rem 0}
+.tabs button{background:#fff;color:var(--accent)}
+.tabs button.on{background:var(--accent);color:#fff}
+.hide{display:none}
+.card .who{font-size:1.3rem;color:var(--sub);margin-bottom:.4rem}
+.card{border:1px solid var(--line);border-radius:4px;padding:1rem;text-align:center;min-height:22rem;display:flex;flex-direction:column;justify-content:center}
+.card.h{background:var(--redbg);border-color:var(--red);color:var(--red)}
+.card.w{background:var(--greenbg);border-color:var(--green);color:var(--green)}
+.card .big{font-size:7rem;font-weight:700;line-height:1.2}
+.card .nums{font-size:1.1rem;color:var(--sub);margin-top:.6rem}
+#warn{display:none;margin:.8rem 1.2rem;padding:.8rem 1rem;background:#fff4e5;border:1px solid #e0a040;border-radius:4px}
+footer{padding:.4rem 1.2rem;font-size:.85rem;color:var(--sub)}
+</style>
+</head>
+<body>
+<header><h1>Pico で判断</h1><button id="conn">Pico に接続</button><span class="st" id="status">未接続</span></header>
+<div id="warn">このブラウザは Web Serial に対応していません。Windows の Edge または Chrome（バージョン 89 以降）で開いてください。Safari・Firefox では動きません。</div>
+<div class="tabs"><button id="tabA" class="on">入力を送って判断</button><button id="tabB">Pico 単体の判断</button></div>
+<main id="viewA">
+<section class="panel">
+  <h2>入力</h2>
+  <div class="row">
+    <div><label for="pref">都道府県</label><select id="pref"></select></div>
+    <div><label for="variety">品種</label><select id="variety"></select></div>
+  </div>
+  <div class="row">
+    <div><label for="past">過去 2 日の雨（mm）</label><input type="number" id="past" min="0" max="200" step="1" value="40"></div>
+    <div><label for="fc">これから 2 日の予報の雨（mm）</label><input type="number" id="fc" min="0" max="300" step="1" value="80"></div>
+  </div>
+  <div class="row">
+    <div><label for="wind">10 m 最大風速（m/s）</label><input type="number" id="wind" min="0" max="40" step="0.1" value="18"></div>
+    <div><label for="gdd">出穂後積算気温（℃、茨城・千葉だけ使う）</label><input type="number" id="gdd" min="0" max="2000" step="1" value="900"></div>
+  </div>
+  <button id="go" disabled>Pico で判断</button>
+</section>
+<section class="panel">
+  <h2>Pico の判断</h2>
+  <div class="card" id="card"><div class="big">&mdash;</div></div>
+</section>
+</main>
+<main id="viewB" class="hide" style="grid-template-columns:1fr">
+<section class="panel">
+  <h2>Pico の判断（基板のボタン BOOTSEL を押したとき）</h2>
+  <div class="card" id="cardB"><div class="big">&mdash;</div></div>
+</section>
+</main>
+<footer>判断の計算はすべて Pico 上で行われ、このページは入力を送って結果を表示するだけです。最終判断は農家と地元の専門家が行います。</footer>
+
+<script>
+const PREFS=["三重","京都","佐賀","兵庫","北海道","千葉","和歌山","埼玉","大分","大阪","奈良","宮城","宮崎","富山","山口","山形","山梨","岐阜","岡山","岩手","島根","広島","徳島","愛媛","愛知","新潟","東京","栃木","沖縄","滋賀","熊本","石川","神奈川","福井","福岡","福島","秋田","群馬","茨城","長崎","長野","青森","静岡","香川","高知","鳥取","鹿児島"];
+const VARIETY={koshihikari:"コシヒカリ",akitakomachi:"あきたこまち",fukumaru:"ふくまる",nijinokirameki:"にじのきらめき"};
+const $=id=>document.getElementById(id);
+PREFS.forEach(k=>{const o=document.createElement("option");o.value=o.textContent=k;$("pref").appendChild(o);});
+$("pref").value="茨城";
+Object.keys(VARIETY).forEach(k=>{const o=document.createElement("option");o.value=k;o.textContent=VARIETY[k];$("variety").appendChild(o);});
+
+let port=null, writer=null, reader=null;
+function setStatus(s){$("status").textContent=s;}
+
+function show(id,j){
+  const el=$(id);
+  if(j.error){el.className="card";el.innerHTML='<div class="big" style="font-size:2.4rem">'+esc(j.error)+'</div>';return;}
+  el.className="card "+(j.harvest?"h":"w");
+  el.innerHTML=(id==="cardB"&&j.pref?'<div class="who">'+esc(j.pref)+'</div>':'')
+    +'<div class="big">'+(j.harvest?"刈る":"待ってよい")+'</div>'
+    +'<div class="nums">被害が出る確率の目安 '+Math.round(j.prob*100)+'%　閾値 '+Math.round(j.threshold*100)+'%</div>';
+}
+function esc(s){return String(s).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));}
+
+function onLine(line){
+  line=line.trim();
+  if(!line) return;
+  let j;
+  try{j=JSON.parse(line);}catch(e){return;}
+  if(j.src==="button") show("cardB",j);   // 基板のボタン由来（demo_main.py）
+  else if(j.error||"harvest" in j) show("card",j);  // シリアルの命令への応答
+}
+
+async function readLoop(){
+  const dec=new TextDecoderStream();
+  const done=port.readable.pipeTo(dec.writable).catch(()=>{});
+  reader=dec.readable.getReader();
+  let buf="";
+  try{
+    for(;;){
+      const r=await reader.read();
+      if(r.done) break;
+      buf+=r.value;
+      let i;
+      while((i=buf.indexOf("\n"))>=0){onLine(buf.slice(0,i));buf=buf.slice(i+1);}
+    }
+  }catch(e){}
+  finally{try{reader.releaseLock();}catch(e){}}
+  await done;
+}
+
+async function connect(){
+  try{
+    port=await navigator.serial.requestPort();
+    await port.open({baudRate:115200});
+    writer=port.writable.getWriter();
+    setStatus("接続中");$("go").disabled=false;$("conn").textContent="切断";
+    readLoop().then(()=>{setStatus("切断");$("go").disabled=true;$("conn").textContent="Pico に接続";});
+  }catch(e){setStatus("未接続");port=null;}
+}
+async function disconnect(){
+  try{await reader.cancel();}catch(e){}
+  try{writer.releaseLock();}catch(e){}
+  try{await port.close();}catch(e){}
+  port=null;setStatus("未接続");$("go").disabled=true;$("conn").textContent="Pico に接続";
+}
+$("conn").addEventListener("click",()=>{port?disconnect():connect();});
+
+$("go").addEventListener("click",async()=>{
+  const g=$("gdd").value.trim();
+  const line=[$("pref").value,$("past").value||0,$("fc").value||0,$("wind").value||0,g,$("variety").value].join(",")+"\n";
+  try{await writer.write(new TextEncoder().encode(line));}catch(e){setStatus("送信できませんでした");}
+});
+
+function tab(b){$("viewA").classList.toggle("hide",b);$("viewB").classList.toggle("hide",!b);
+  $("tabA").classList.toggle("on",!b);$("tabB").classList.toggle("on",b);}
+$("tabA").addEventListener("click",()=>tab(false));$("tabB").addEventListener("click",()=>tab(true));
+
+if(!("serial" in navigator)){
+  $("warn").style.display="block";$("conn").disabled=true;setStatus("非対応ブラウザ");
+}
+</script>
+</body>
+</html>
