@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>前半スライド（プロト）</title>
+<style>
+  :root{
+    --bg:#0b1f23; --panel:#12333a; --panel2:#0f2a30; --line:#245058;
+    --text:#e8f1ee; --muted:#93b3ad; --accent:#e8c547; --teal:#4fb8a5; --alert:#e8735f;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%;background:#061418;color:var(--text);
+    font-family:"Noto Sans JP","Hiragino Kaku Gothic ProN","Hiragino Sans","Yu Gothic","Meiryo",system-ui,sans-serif;
+    overflow:hidden}
+  #viewport{position:fixed;inset:0;display:grid;place-items:center}
+  #stage{width:1280px;height:720px;position:relative;transform-origin:center center;flex:none}
+  .slide{position:absolute;inset:0;background:radial-gradient(1200px 700px at 85% -10%,#173c44 0%,var(--bg) 60%);
+    padding:56px 72px 64px;display:none;flex-direction:column}
+  .slide.active{display:flex}
+  .tag{font-size:20px;letter-spacing:.14em;color:var(--accent);font-weight:600}
+  h1{font-size:46px;line-height:1.25;font-weight:700;margin-top:10px;letter-spacing:.01em}
+  .body{flex:1;display:flex;gap:44px;margin-top:34px;min-height:0}
+  .col{flex:1;display:flex;flex-direction:column;gap:20px;min-width:0}
+  ul.pts{list-style:none;display:flex;flex-direction:column;gap:18px}
+  ul.pts li{font-size:28px;line-height:1.5;padding-left:30px;position:relative}
+  ul.pts li::before{content:"";position:absolute;left:0;top:.62em;width:12px;height:12px;border-radius:3px;background:var(--accent)}
+  ul.pts li small{display:block;font-size:20px;color:var(--muted);margin-top:2px}
+  .hl{color:var(--accent);font-weight:700;white-space:nowrap}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:26px 30px}
+  .foot{position:absolute;left:72px;right:72px;bottom:22px;display:flex;justify-content:space-between;
+    font-size:15px;color:var(--muted)}
+  .photo{border:2px dashed var(--line);border-radius:16px;background:var(--panel2);height:100%;min-height:360px;
+    display:grid;place-items:center;text-align:center;color:var(--muted);font-size:22px;line-height:1.7;padding:24px}
+  .photo b{display:block;color:var(--text);font-size:26px}
+  table{border-collapse:separate;border-spacing:0;width:100%;font-size:25px}
+  th,td{padding:16px 22px;text-align:left;vertical-align:top;line-height:1.45}
+  th{font-size:19px;color:var(--muted);font-weight:600;letter-spacing:.08em;border-bottom:1px solid var(--line)}
+  td{border-bottom:1px solid var(--line)}
+  tr:last-child td{border-bottom:none}
+  td.k{color:var(--accent);font-weight:700;white-space:nowrap}
+  .chip{display:inline-block;padding:8px 18px;border:1px solid var(--teal);color:var(--teal);border-radius:999px;font-size:22px;margin:0 10px 10px 0}
+  .q{font-size:34px;line-height:1.5;font-weight:700}
+  .step{display:flex;flex-direction:column;gap:14px}
+  .step .row{display:flex;gap:18px;align-items:stretch}
+  .step .lab{width:130px;flex:none;font-size:20px;font-weight:700;display:grid;place-items:center;border-radius:12px}
+  .step .t{flex:1;font-size:24px;line-height:1.45;padding:16px 22px;border-radius:12px;background:var(--panel);border:1px solid var(--line)}
+  .dream .lab{background:#3a3a1d;color:var(--accent)} .goal .lab{background:#14463f;color:var(--teal)}
+  #nav{position:fixed;left:0;right:0;bottom:10px;display:flex;justify-content:center;gap:10px;z-index:5}
+  #nav i{width:30px;height:5px;border-radius:3px;background:#2b4a50;cursor:pointer}
+  #nav i.on{background:var(--accent)}
+  @media print{
+    @page{size:1280px 720px;margin:0}
+    html,body{overflow:visible;height:auto;background:#fff}
+    #viewport{position:static;display:block}
+    #stage{transform:none!important;width:1280px;height:auto}
+    .slide{display:flex!important;position:relative;height:720px;page-break-after:always}
+    #nav{display:none}
+  }
+</style>
+</head>
+<body>
+<div id="viewport"><div id="stage">
+
+<!-- 1 背景 -->
+<section class="slide">
+  <div class="tag">01　背景</div>
+  <h1>台風の予報が出たら、刈る</h1>
+  <div class="body">
+    <div class="col">
+      <div class="photo"><div><b>友人の田んぼの写真</b>★掲載の許可待ち（名前・場所は出さない）</div></div>
+    </div>
+    <div class="col" style="justify-content:center">
+      <ul class="pts">
+        <li>台風・大雨の予報が出ると、<span class="hl">予定より早く</span>、まだ青い稲でも刈る
+          <small>友人（米農家）のヒアリングより</small></li>
+        <li>自分で決めた日ではなく、<span class="hl">予報に急かされた日</span>に収穫している</li>
+      </ul>
+      <div style="margin-top:14px">
+        <span class="chip">お題: Field Shift</span><span class="chip">チーム名 ★</span>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>NASA Space Apps Challenge 2026 東京</span><span>1 / 5</span></div>
+</section>
+
+<!-- 2 現状 -->
+<section class="slide">
+  <div class="tag">02　現状</div>
+  <h1>刈れる日と、適期のずれ</h1>
+  <div class="body" style="gap:36px;align-items:center">
+    <div class="col" style="flex:1.35">
+      <div class="card" style="padding:20px 24px">
+        <svg viewBox="0 0 640 370" width="100%" role="img" aria-label="出穂後日数の時間軸。適期は35〜40日。予報で前倒しされた収穫は適期より前。">
+          <defs>
+            <marker id="ar" markerUnits="userSpaceOnUse" markerWidth="22" markerHeight="22" refX="16" refY="11" orient="auto">
+              <path d="M0,0 L22,11 L0,22 z" fill="#e8735f"/></marker>
+          </defs>
+          <text x="20" y="32" fill="#93b3ad" font-size="20">出穂後の日数（目安）</text>
+          <rect x="20"  y="56" width="330" height="76" rx="10" fill="#17424a"/>
+          <rect x="350" y="56" width="90"  height="76" fill="#e8c547"/>
+          <rect x="440" y="56" width="180" height="76" rx="10" fill="#3d2f2a"/>
+          <text x="185" y="104" fill="#e8f1ee" font-size="25" text-anchor="middle">未熟（青い稲）</text>
+          <text x="395" y="104" fill="#0b1f23" font-size="25" font-weight="700" text-anchor="middle">適期</text>
+          <text x="530" y="104" fill="#e8f1ee" font-size="25" text-anchor="middle">刈り遅れ</text>
+          <line x1="20" y1="152" x2="620" y2="152" stroke="#245058" stroke-width="2"/>
+          <g fill="#93b3ad" font-size="20" text-anchor="middle">
+            <text x="20"  y="184">0</text>
+            <text x="350" y="184">35日</text>
+            <text x="440" y="184">40日</text>
+          </g>
+          <text x="395" y="214" fill="#e8c547" font-size="20" text-anchor="middle">千葉・茨城（コシヒカリ）の目安</text>
+          <text x="290" y="258" fill="#e8735f" font-size="24" text-anchor="middle" font-weight="700">予報で前倒し</text>
+          <line x1="395" y1="280" x2="190" y2="280" stroke="#e8735f" stroke-width="5" marker-end="url(#ar)"/>
+          <text x="190" y="326" fill="#e8f1ee" font-size="23" text-anchor="middle">未熟粒が増え、検査等級が下がる</text>
+          <text x="20" y="360" fill="#93b3ad" font-size="15">※ 矢印の位置は例。積算気温では適期はおよそ 900〜1,000℃（県・品種で異なる）</text>
+        </svg>
+      </div>
+    </div>
+    <div class="col" style="flex:1">
+      <div class="card">
+        <div style="font-size:22px;color:var(--muted);margin-bottom:14px">過去の台風 22 回（関東南部）</div>
+        <svg viewBox="0 0 400 78" width="100%" role="img" aria-label="22回の台風のうち、被害あり6回、被害なし16回">
+          <rect x="0" y="6" width="109" height="44" rx="6" fill="#e8735f"/>
+          <rect x="113" y="6" width="287" height="44" rx="6" fill="#4fb8a5"/>
+          <text x="54" y="36" fill="#0b1f23" font-size="22" font-weight="700" text-anchor="middle">6</text>
+          <text x="256" y="36" fill="#0b1f23" font-size="22" font-weight="700" text-anchor="middle">16</text>
+          <text x="54" y="74" fill="#e8f1ee" font-size="17" text-anchor="middle">被害あり</text>
+          <text x="256" y="74" fill="#e8f1ee" font-size="17" text-anchor="middle">被害なし</text>
+        </svg>
+        <div style="font-size:28px;line-height:1.5;margin-top:22px"><span class="hl">16 回</span>は、刈らなくても<br>よかったかもしれない</div>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>出典: 千葉県・茨城県の収穫の資料、農水省の災害統計（茨城＋千葉の水稲被害 100 ha 以上を「被害あり」）</span><span>2 / 5</span></div>
+</section>
+
+<!-- 3 課題 -->
+<section class="slide">
+  <div class="tag">03　課題</div>
+  <h1>判断の基準がない</h1>
+  <div class="body" style="flex-direction:column;gap:34px;justify-content:center">
+    <div class="card" style="padding:12px 18px">
+      <table style="font-size:28px">
+        <tbody>
+          <tr><td class="k" style="width:34%">予報が言うこと</td><td>大雨・強風の見込み、台風の進路</td></tr>
+          <tr><td class="k">予報が言わないこと</td><td><span class="hl">自分の田んぼが倒れるか</span>、<span class="hl">待ってよいか</span></td></tr>
+          <tr><td class="k">公的な統計</td><td>県・年単位で粗く、田んぼ 1 枚の判断には使えない</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div style="display:flex;align-items:center;gap:20px;font-size:30px">
+      <span style="padding:12px 22px;border-radius:12px;background:var(--panel);border:1px solid var(--line)">判断基準がない</span>
+      <span style="color:var(--muted)">→</span>
+      <span style="padding:12px 22px;border-radius:12px;background:var(--panel);border:1px solid var(--line)">安全側に倒す</span>
+      <span style="color:var(--muted)">→</span>
+      <span style="padding:12px 22px;border-radius:12px;background:#3d2f2a;border:1px solid #6b4a40;color:#f3b8a8">早刈りしか選べない</span>
+    </div>
+  </div>
+  <div class="foot"><span>出典: 友人のヒアリング、農水省の統計の粒度</span><span>3 / 5</span></div>
+</section>
+
+<!-- 4 問いと目的 -->
+<section class="slide">
+  <div class="tag">04　問いと目的</div>
+  <h1>お題: Field Shift</h1>
+  <div class="body">
+    <div class="col" style="justify-content:center;gap:28px;flex:1.05">
+      <div class="q">「<span class="hl">刈る</span>／<span class="hl">待ってよい</span>」の基準を、<br>NASA のデータで<br>作れるか</div>
+      <div>
+        <span class="chip">弱い時期（登熟期）の特定</span><span class="chip">農家の判断を置き換えない</span>
+      </div>
+    </div>
+    <div class="col" style="justify-content:center">
+      <div class="step">
+        <div class="row dream"><div class="lab">夢（目的）</div>
+          <div class="t">農家が、根拠をもって、<br>自分で収穫と作付けを<br>決められる</div></div>
+        <div style="text-align:center;color:var(--muted);font-size:26px">↑</div>
+        <div class="row goal"><div class="lab">目標（今回）</div>
+          <div class="t">収穫判断の基準を作り、<br>過去の台風で検証する</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>お題: Field Shift（NASA の地球観測と地域の農業情報で、農家の判断を支える）</span><span>4 / 5</span></div>
+</section>
+
+<!-- 5 設計の前提 -->
+<section class="slide">
+  <div class="tag">05　設計の前提</div>
+  <h1>農家という粒度</h1>
+  <div class="body" style="flex-direction:column;gap:22px">
+    <div class="card" style="padding:8px 14px">
+      <table>
+        <thead><tr><th style="width:26%">制約</th><th style="width:34%">意味</th><th>設計への帰結</th></tr></thead>
+        <tbody>
+          <tr><td class="k">判断は農家</td><td>道具は決めない</td><td>基準と、その理由を出す</td></tr>
+          <tr><td class="k">高価な計算資源なし</td><td>GPU もサーバーもない</td><td>事務用 PC で動く、係数が数個の軽い式</td></tr>
+          <tr><td class="k">ロックインなし</td><td>特定の会社に縛られない</td><td>外部サービスに依存せず、入力元は差し替え可能</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div style="font-size:28px;line-height:1.5">結果として、<span class="hl">「なぜ刈れと言うのか」を説明できる式</span>にする</div>
+  </div>
+  <div class="foot"><span>※ NASA のデータは学習にも、予報の入力にも使う</span><span>5 / 5</span></div>
+</section>
+
+</div></div>
+<div id="nav"></div>
+
+<script>
+(function(){
+  var slides=[].slice.call(document.querySelectorAll('.slide'));
+  var stage=document.getElementById('stage'), nav=document.getElementById('nav');
+  var cur=0;
+  function fit(){
+    var s=Math.min(window.innerWidth/1280, window.innerHeight/720);
+    stage.style.transform='scale('+s+')';
+  }
+  function show(i){
+    cur=Math.max(0,Math.min(slides.length-1,i));
+    slides.forEach(function(el,k){el.classList.toggle('active',k===cur)});
+    [].forEach.call(nav.children,function(d,k){d.classList.toggle('on',k===cur)});
+    try{history.replaceState(null,'','#'+(cur+1))}catch(e){}
+  }
+  slides.forEach(function(_,k){var d=document.createElement('i');d.onclick=function(){show(k)};nav.appendChild(d)});
+  window.addEventListener('resize',fit); fit();
+  document.addEventListener('keydown',function(e){
+    if(['ArrowRight','PageDown',' ','Enter'].indexOf(e.key)>=0){e.preventDefault();show(cur+1)}
+    if(['ArrowLeft','PageUp','Backspace'].indexOf(e.key)>=0){e.preventDefault();show(cur-1)}
+    if(e.key==='Home')show(0); if(e.key==='End')show(slides.length-1);
+  });
+  document.getElementById('viewport').addEventListener('click',function(e){
+    show(e.clientX>window.innerWidth/2?cur+1:cur-1);
+  });
+  function fromHash(){var h=parseInt((location.hash||'').slice(1),10);show(isNaN(h)?0:h-1)}
+  window.addEventListener('hashchange',fromHash);
+  fromHash();
+})();
+</script>
+</body>
+</html>
