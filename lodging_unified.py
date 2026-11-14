@@ -62,7 +62,7 @@ def decide(pref, rain_past_mm, rain_forecast_mm, wind_ms, gdd=None, variety="kos
         z += loc["d"] + loc["e_ripe"] * ripe
         thr = loc["threshold"]
         if gdd < lo:
-            reasons.append(f"稲がまだ青い（出穂後 {gdd:.0f}℃ < {lo:.0f}℃）ので倒れにくい［{name}の地域の知見］")
+            reasons.append(f"稲がまだ実りきっていない（出穂後 {gdd:.0f}℃ < {lo:.0f}℃）ので倒れにくい［{name}の地域の知見］")
         elif gdd >= hi:
             reasons.append(f"出穂後 {gdd:.0f}℃ で、収穫の時期を過ぎている［{name}の地域の知見］")
         else:

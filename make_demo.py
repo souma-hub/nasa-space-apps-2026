@@ -157,7 +157,7 @@ function decide(D,pref,rainPast,rainForecast,wind,gdd,variety){
     const ripe=(lo<=gdd&&gdd<hi)?1:0;
     z+=loc.d+loc.e_ripe*ripe;
     thr=loc.threshold;
-    if(gdd<lo) reasons.push("稲がまだ青い（出穂後 "+gdd.toFixed(0)+"℃ < "+lo.toFixed(0)+"℃）ので倒れにくい［"+name+"の地域の知見］");
+    if(gdd<lo) reasons.push("稲がまだ実りきっていない（出穂後 "+gdd.toFixed(0)+"℃ < "+lo.toFixed(0)+"℃）ので倒れにくい［"+name+"の地域の知見］");
     else if(gdd>=hi) reasons.push("出穂後 "+gdd.toFixed(0)+"℃ で、収穫の時期を過ぎている［"+name+"の地域の知見］");
     else reasons.push("稲が実って倒れやすい時期（出穂後 "+gdd.toFixed(0)+"℃）［"+name+"の地域の知見］");
   }else{

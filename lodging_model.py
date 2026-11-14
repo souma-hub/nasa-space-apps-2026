@@ -76,7 +76,7 @@ def decide(rain_past_mm, rain_forecast_mm, gdd, variety="koshihikari"):
     if gdd >= 1500:
         reasons.append(f"出穂後 {gdd:.0f}℃ で、すでに収穫の時期を過ぎている（刈り取り済みの可能性）")
     elif not ripe:
-        reasons.append(f"稲がまだ青い（出穂後 {gdd:.0f}℃ < {GDD:.0f}℃）ので倒れにくく、刈ると損が大きい")
+        reasons.append(f"稲がまだ実りきっていない（出穂後 {gdd:.0f}℃ < {GDD:.0f}℃）ので倒れにくく、刈ると損が大きい")
     else:
         reasons.append(f"稲が実っている（出穂後 {gdd:.0f}℃ ≥ {GDD:.0f}℃）")
     reasons.append(f"雨 {rain:.0f} mm（過去 {rain_past_mm:.0f} + 予報 {rain_forecast_mm:.0f}）"

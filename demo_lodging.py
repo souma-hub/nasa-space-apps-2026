@@ -23,14 +23,14 @@ from lodging_unified import VARIETY_JA, decide, load  # noqa: E402
 # 架空のシナリオ（数字はすべて作り物。判断の違いが分かるように選んだ）
 SCENARIOS = [
     ("強い台風が直撃、稲は実っている", dict(pref="茨城", rain_past_mm=40, rain_forecast_mm=80, wind_ms=18, gdd=900)),
-    ("同じ台風、ただし稲がまだ青い（強い台風なので、それでも刈る）",
+    ("同じ台風、ただし稲がまだ実りきっていない（強い台風なので、それでも刈る）",
      dict(pref="茨城", rain_past_mm=40, rain_forecast_mm=80, wind_ms=18, gdd=250)),
     ("台風が遠くを通る（雨も風も弱い）", dict(pref="千葉", rain_past_mm=5, rain_forecast_mm=15, wind_ms=9, gdd=900)),
     ("雨は多いが風は弱い", dict(pref="千葉", rain_past_mm=30, rain_forecast_mm=40, wind_ms=8, gdd=900)),
     ("中くらいの台風、倒れにくい品種", dict(pref="茨城", rain_past_mm=15, rain_forecast_mm=25, wind_ms=12, gdd=900,
                                      variety="nijinokirameki")),
     ("中くらいの台風、コシヒカリ", dict(pref="茨城", rain_past_mm=15, rain_forecast_mm=25, wind_ms=12, gdd=900)),
-    ("中くらいの台風、ただし稲がまだ青い", dict(pref="茨城", rain_past_mm=15, rain_forecast_mm=25, wind_ms=12, gdd=250)),
+    ("中くらいの台風、ただし稲がまだ実りきっていない", dict(pref="茨城", rain_past_mm=15, rain_forecast_mm=25, wind_ms=12, gdd=250)),
     ("全国の部分だけ: 九州に強い台風", dict(pref="鹿児島", rain_past_mm=60, rain_forecast_mm=100, wind_ms=20)),
     ("全国の部分だけ: 東北をかすめる台風", dict(pref="宮城", rain_past_mm=10, rain_forecast_mm=20, wind_ms=11)),
     ("全国の部分だけ: 北陸、雨だけ少し", dict(pref="新潟", rain_past_mm=10, rain_forecast_mm=15, wind_ms=8)),
