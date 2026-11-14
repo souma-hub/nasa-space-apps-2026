@@ -53,6 +53,10 @@ API キーの置き方（`apod.py --legacy` と `neows.py` が使う。未設定
 
 ## 発表用デモ画面
 統一モデルの「刈る／待ってよい」判断を、ブラウザで動かして見せる 1 ファイル完結の画面（外部通信なし、オフラインで動く）。
-- 作る: `uv run make_demo.py`（`results/unified_model.json`・`results/unified_kanto_loo.csv`・`demo_lodging.py` のシナリオを埋め込んで `docs/demo/index.html` を生成）
+- 作る: `uv run make_demo.py`（`results/unified_model.json`・`results/unified_kanto_loo.csv`を埋め込んで `docs/demo/index.html` を生成）
 - 開く: `docs/demo/index.html` をブラウザで開く（プロジェクター向け 16:9。入力を動かすと即時に再計算）
 - 検証: `uv run check_demo.py`（JS の判定が Python の `decide()` と一致するかを node で確認）
+- 入力の初期値は URL クエリで渡せる: `index.html?pref=茨城&variety=koshihikari&past=40&forecast=80&wind=18&gdd=900`（どれも省略可。不正値は既定値）。シナリオはこの URL を手元に持つ運用
+  - 強い台風が直撃、稲は実っている: `?pref=茨城&past=40&forecast=80&wind=18&gdd=900`
+  - 同じ台風、ただし稲がまだ青い: `?pref=茨城&past=40&forecast=80&wind=18&gdd=250`
+  - 九州に強い台風（全国の部分だけ）: `?pref=鹿児島&past=60&forecast=100&wind=20`

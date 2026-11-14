@@ -4,7 +4,7 @@
 # ///
 """発表用デモ画面 docs/demo/index.html を作る（1 ファイル完結、オフラインで file:// で開ける）。
 
-係数（results/unified_model.json）・過去 23 台風（results/unified_kanto_loo.csv）・シナリオ（demo_lodging.py）を
+係数（results/unified_model.json）・過去 23 台風（results/unified_kanto_loo.csv）を
 HTML に JSON として埋め込む。係数を学習し直したら、これを実行し直す。検証は check_demo.py。
 """
 import csv
@@ -16,7 +16,6 @@ ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT))
 import nasa_common  # noqa: E402,F401  出力の UTF-8 固定のため
 
-from demo_lodging import SCENARIOS  # noqa: E402
 from lodging_unified import FORECAST_FACTOR, VARIETY_JA, VARIETY_RAIN_FACTOR  # noqa: E402
 
 MODEL = ROOT / "results/unified_model.json"
@@ -35,13 +34,8 @@ def build_data():
                 "damage_ha": float(r["被害ha"]), "damaged": r["被害あり"] == "True",
                 "p_unified": float(r["p_unified"]),
             })
-    scenarios = []
-    for title, kw in SCENARIOS:
-        scenarios.append({"title": title, "pref": kw["pref"], "past": kw["rain_past_mm"],
-                          "forecast": kw["rain_forecast_mm"], "wind": kw["wind_ms"],
-                          "gdd": kw.get("gdd"), "variety": kw.get("variety", "koshihikari")})
     return {"model": model, "forecast_factor": FORECAST_FACTOR, "variety_rain_factor": VARIETY_RAIN_FACTOR,
-            "variety_ja": VARIETY_JA, "scenarios": scenarios, "typhoons": typhoons}
+            "variety_ja": VARIETY_JA, "typhoons": typhoons}
 
 
 def main():
@@ -50,7 +44,7 @@ def main():
     html = TEMPLATE.replace("__DATA__", blob)
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(html, encoding="utf-8", newline="\n")
-    print(f"書き出し: {OUT}（{len(html) / 1024:.0f} KB、台風 {len(data['typhoons'])} 個、シナリオ {len(data['scenarios'])} 個）")
+    print(f"書き出し: {OUT}（{len(html) / 1024:.0f} KB、台風 {len(data['typhoons'])} 個）")
 
 
 TEMPLATE = r'''<!DOCTYPE html>
@@ -58,21 +52,18 @@ TEMPLATE = r'''<!DOCTYPE html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>待つか、刈るか。 To wait, or to harvest.</title>
+<title>刈り取り判断モデル（デモ用）</title>
 <!-- このファイルは make_demo.py が自動で作る。手で直さない。 -->
 <style>
 :root{--bg:#f5f6f8;--panel:#fff;--ink:#1f2933;--sub:#52606d;--line:#d9dee3;--accent:#1f5fa8;--red:#c0392b;--redbg:#fbeceb;--green:#2e7d32;--greenbg:#e8f3e9}
 *{box-sizing:border-box}
 html{font-size:min(1.1vw,1.9vh)}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,"Hiragino Sans","Yu Gothic UI","Meiryo",sans-serif;height:100vh;overflow:hidden;display:grid;grid-template-rows:auto 1fr auto;font-variant-numeric:tabular-nums}
-header{display:flex;align-items:baseline;gap:.8rem;padding:.4rem 1rem;background:#fff;border-bottom:1px solid var(--line)}
+header{display:flex;align-items:baseline;padding:.4rem 1rem;background:#fff;border-bottom:1px solid var(--line)}
 header h1{margin:0;font-size:1.5rem;font-weight:700}
-header .en{font-size:.85rem;color:var(--sub)}
-header .target{margin-left:auto;font-size:.85rem;color:var(--sub)}
-header .ms{font-size:.8rem;color:var(--sub);min-width:8rem;text-align:right}
 main{display:grid;grid-template-columns:5fr 7fr;grid-template-rows:auto 1fr;gap:.6rem;min-height:0;padding:.6rem 1rem}
 .panel{background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:.6rem .8rem;min-height:0}
-#inputs{grid-row:1/3;overflow:auto}
+#inputs{grid-row:1/3;overflow:auto;display:flex;flex-direction:column;justify-content:flex-start;gap:1.6rem;padding:.8rem}
 #result{display:grid;grid-template-columns:auto 1fr;gap:1rem;align-items:stretch}
 #scatterbox{position:relative;display:flex;flex-direction:column}
 h2{margin:0 0 .35rem;font-size:.95rem;color:var(--sub);font-weight:700}
@@ -86,21 +77,14 @@ select{width:100%;font:inherit;font-size:1rem;padding:.2rem;color:var(--ink)}
 input[type=range]{width:100%;margin:.1rem 0;accent-color:var(--accent)}
 .sl.off{opacity:.45}
 .sl .note{font-size:.8rem;color:var(--sub);min-height:1em}
-#scen{display:flex;flex-wrap:wrap;gap:.3rem}
-#scen button{font:inherit;font-size:.78rem;line-height:1.25;text-align:left;padding:.2rem .45rem;border:1px solid var(--accent);background:#fff;border-radius:4px;cursor:pointer;color:var(--accent)}
-#scen button:hover{background:#eef4fb}
-#scen button.on{background:var(--accent);color:#fff}
-#actual{font-size:.9rem;font-weight:700;margin-top:.25rem;min-height:1.2em}
 #card{min-width:13rem;border-radius:4px;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:.5rem 1rem;border:1px solid}
 #card.h{background:var(--redbg);border-color:var(--red);color:var(--red)}
 #card.w{background:var(--greenbg);border-color:var(--green);color:var(--green)}
 #card .big{font-size:3.2rem;font-weight:700;line-height:1.15}
-#card .mark{font-size:.85rem;color:var(--ink)}
 #detail{min-width:0}
 .prob{font-size:1rem;margin-bottom:.1rem}
 .prob b{font-size:1.8rem}
 #bar{width:100%;height:3.2rem;display:block}
-ul#reasons{margin:.2rem 0 0;padding-left:1.2rem;font-size:.85rem;line-height:1.35;color:var(--sub)}
 #scatter{flex:1;min-height:0;width:100%}
 #tip{position:absolute;pointer-events:none;background:var(--ink);color:#fff;font-size:.85rem;padding:.25rem .5rem;border-radius:4px;display:none;white-space:nowrap;z-index:5}
 footer{font-size:.8rem;color:var(--sub);display:flex;gap:1.2rem;flex-wrap:wrap;align-items:baseline;padding:.4rem 1rem;border-top:1px solid var(--line);background:#fff}
@@ -108,7 +92,7 @@ footer .msg{font-weight:700;color:var(--ink);font-size:.9rem}
 </style>
 </head>
 <body>
-<header><h1>待つか、刈るか。</h1><span class="en">To wait, or to harvest.</span><span class="target">茨城・千葉／全国モデル v1</span><span class="ms" id="ms"></span></header>
+<header><h1>刈り取り判断モデル（デモ用）</h1></header>
 <main>
 <section class="panel" id="inputs">
   <h2>入力</h2>
@@ -120,18 +104,12 @@ footer .msg{font-weight:700;color:var(--ink);font-size:.9rem}
   <div class="sl"><div class="top"><span>これから 2 日の予報の雨</span><span><span class="v" id="v_fc"></span> <span class="unit">mm</span></span></div><input type="range" id="fc" min="0" max="300" step="1"></div>
   <div class="sl"><div class="top"><span>10 m 最大風速</span><span><span class="v" id="v_wind"></span> <span class="unit">m/s</span></span></div><input type="range" id="wind" min="0" max="40" step="0.1"></div>
   <div class="sl" id="gddbox"><div class="top"><span>出穂後積算気温</span><span><span class="v" id="v_gdd"></span> <span class="unit">℃</span></span></div><input type="range" id="gdd" min="0" max="2000" step="1"><div class="note" id="gddnote"></div></div>
-  <h2>シナリオ（架空）</h2>
-  <div id="scen"></div>
-  <h2 style="margin-top:.5rem">過去の台風を再現（茨城・コシヒカリ）</h2>
-  <select id="replay"></select>
-  <div id="actual"></div>
 </section>
 <section class="panel" id="result">
-  <div id="card"><div class="big" id="dec"></div><div class="mark" id="decsub"></div></div>
+  <div id="card"><div class="big" id="dec"></div></div>
   <div id="detail">
     <div class="prob">被害が出る確率の目安 <b id="pv"></b>　<span style="color:var(--sub);font-size:.9rem">閾値 <span id="tv"></span></span></div>
     <svg id="bar" role="img" aria-label="確率と閾値"></svg>
-    <ul id="reasons"></ul>
   </div>
 </section>
 <section class="panel" id="scatterbox">
@@ -141,9 +119,8 @@ footer .msg{font-weight:700;color:var(--ink);font-size:.9rem}
 </section>
 </main>
 <footer>
-  <span class="msg">判断するのは農家です。この画面は判断の材料を出す支援の道具です。</span>
-  <span>データ源: GPM IMERG（雨）・NASA POWER（風・気温）・GEOS-FP（予報）</span>
-  <span id="trained"></span>
+  <span class="msg">判断するのは農家です。</span>
+  <span>データ: GPM IMERG・NASA POWER</span>
 </footer>
 
 <script id="data" type="application/json">__DATA__</script>
@@ -208,29 +185,13 @@ const INK="#1f2933",SUB="#52606d",ACC="#1f5fa8",RED="#c0392b",GREEN="#2e7d32";
 
 Object.keys(P.pref).forEach(k=>{const o=document.createElement("option");o.value=o.textContent=k;$("pref").appendChild(o);});
 Object.keys(D.variety_ja).forEach(k=>{const o=document.createElement("option");o.value=k;o.textContent=D.variety_ja[k];$("variety").appendChild(o);});
-{const o=document.createElement("option");o.value="";o.textContent="（選ぶと入力に反映）";$("replay").appendChild(o);}
-D.typhoons.forEach((t,i)=>{const o=document.createElement("option");o.value=i;o.textContent=t.name+"（"+t.date+"）";$("replay").appendChild(o);});
-D.scenarios.forEach((s,i)=>{const b=document.createElement("button");b.textContent=(i+1)+". "+s.title;b.title=s.title;b.addEventListener("click",()=>{applyScenario(i);});$("scen").appendChild(b);});
-$("trained").textContent="学習データ: 全国 "+P.trained_on.national_typhoons+" 台風・"+P.trained_on.national_rows+" 件（被害 "+P.trained_on.national_damage+" 件、"+P.trained_on.years+"）／茨城・千葉 "+LOC.n_typhoons+" 台風（被害 "+LOC.n_damage+"）";
 
-let curReplay=null, curScen=null;
 function setInputs(o){
   $("pref").value=o.pref;$("variety").value=o.variety;
   $("past").value=o.past;$("fc").value=o.forecast;$("wind").value=o.wind;
   if(o.gdd!==null&&o.gdd!==undefined)$("gdd").value=o.gdd;
 }
-function applyScenario(i){
-  const s=D.scenarios[i];curReplay=null;curScen=i;$("replay").value="";
-  setInputs(s);update();
-}
-$("replay").addEventListener("change",()=>{
-  const v=$("replay").value;
-  if(v===""){curReplay=null;update();return;}
-  const t=D.typhoons[+v];curReplay=+v;curScen=null;
-  setInputs({pref:"茨城",variety:"koshihikari",past:t.rain,forecast:0,wind:t.wind,gdd:t.gdd});
-  update();
-});
-["pref","variety","past","fc","wind","gdd"].forEach(id=>$(id).addEventListener("input",()=>{curReplay=null;curScen=null;$("replay").value="";update();}));
+["pref","variety","past","fc","wind","gdd"].forEach(id=>$(id).addEventListener("input",update));
 
 let last=null;
 function update(){
@@ -241,23 +202,13 @@ function update(){
   $("gddnote").textContent=local?"":"この県では使わない";
   $("v_past").textContent=past.toFixed(0);$("v_fc").textContent=fc.toFixed(0);$("v_wind").textContent=wind.toFixed(1);
   $("v_gdd").textContent=local?gddv.toFixed(0):"―";
-  const g=local?gddv:null, N=1000;
-  const t0=performance.now();
-  for(let i=0;i<N;i++)decide(D,pref,past,fc,wind,g,variety);
-  const us=(performance.now()-t0)*1000/N;
+  const g=local?gddv:null;
   const r=decide(D,pref,past,fc,wind,g,variety);
-  $("ms").textContent="計算 1 回あたり "+(us<1?"1 µs 未満":us.toFixed(0)+" µs");
   last={r:r,gdd:local?gddv:null};
   $("card").className=r.harvest?"h":"w";
   $("dec").textContent=r.decision;
-  $("decsub").textContent=r.harvest?"確率が閾値以上":"確率が閾値より低い";
   $("pv").textContent=(r.probability*100).toFixed(1)+"%";
   $("tv").textContent=(r.threshold*100).toFixed(1)+"%";
-  const ul=$("reasons");ul.textContent="";r.reasons.forEach(s=>{const li=document.createElement("li");li.textContent=s;ul.appendChild(li);});
-  const a=$("actual");
-  if(curReplay!==null){const t=D.typhoons[curReplay];a.textContent=t.damaged?"実際: 被害あり（"+t.damage_ha.toFixed(0)+" ha）":"実際: 被害なし";a.style.color=t.damaged?RED:GREEN;}
-  else a.textContent="";
-  [...$("scen").children].forEach((b,i)=>b.classList.toggle("on",i===curScen));
   drawBar(r);drawScatter();
 }
 
@@ -314,28 +265,32 @@ function drawScatter(){
       let L=ev.clientX-b.left+12;if(L+tip.offsetWidth>b.width)L=ev.clientX-b.left-tip.offsetWidth-12;
       tip.style.left=L+"px";tip.style.top=(ev.clientY-b.top-30)+"px";};
     s.addEventListener("mousemove",show);s.addEventListener("mouseenter",show);s.addEventListener("mouseleave",()=>{tip.style.display="none";});
-    if(curReplay===i) el("circle",{cx:x,cy:y,r:13,fill:"none",stroke:INK,"stroke-width":1.5,"stroke-dasharray":"3 3"},svg);
   });
   if(last){
     const x=sx(last.r.effRain);
     if(last.gdd===null){
       el("line",{x1:x,x2:x,y1:mt,y2:mt+h,stroke:ACC,"stroke-width":2,"stroke-dasharray":"6 4"},svg);
-      el("text",{x:Math.min(x+5,ml+w-200),y:mt+16,"font-size":12*K,fill:ACC},svg,"今の雨（この県は気温を使わない）");
+      el("text",{x:x-6,y:mt+16,"text-anchor":"end","font-size":12*K,fill:ACC},svg,"今の雨（この県は気温を使わない）");
     }else{
       el("polygon",{points:starPts(x,sy(last.gdd),13,5.5),fill:ACC,stroke:INK,"stroke-width":1.5},svg);
     }
   }
-  const lx=ml+w-250*K,ly=mt+12;
-  el("rect",{x:lx-8,y:ly-6,width:250*K,height:64*K,fill:"#fff",stroke:"#bcc4cc"},svg);
+  const lx=ml+16,ly=mt+h-64*K+2;
+  el("rect",{x:lx-8,y:ly-6,width:130*K,height:64*K,fill:"#fff",stroke:"#bcc4cc"},svg);
   el("rect",{x:lx+1,y:ly+4*K,width:11,height:11,fill:RED,stroke:"#7b241c","stroke-width":1.5,transform:"rotate(45 "+(lx+6.5)+" "+(ly+9.5)+")"},svg);
-  el("text",{x:lx+22*K,y:ly+14*K,"font-size":13*K,fill:INK},svg,"被害あり（塗りつぶし）");
+  el("text",{x:lx+22*K,y:ly+14*K,"font-size":13*K,fill:INK},svg,"被害あり");
   el("circle",{cx:lx+6.5,cy:ly+30*K,r:6,fill:"#fff",stroke:INK,"stroke-width":2},svg);
-  el("text",{x:lx+22*K,y:ly+34*K,"font-size":13*K,fill:INK},svg,"被害なし（白抜き）");
+  el("text",{x:lx+22*K,y:ly+34*K,"font-size":13*K,fill:INK},svg,"被害なし");
   el("polygon",{points:starPts(lx+6.5,ly+49*K,8,3.5),fill:ACC,stroke:INK},svg);
-  el("text",{x:lx+22*K,y:ly+53*K,"font-size":13*K,fill:INK},svg,"今の入力（実効雨量）");
+  el("text",{x:lx+22*K,y:ly+53*K,"font-size":13*K,fill:INK},svg,"今の入力");
 }
 window.addEventListener("resize",update);
-setInputs({pref:"茨城",variety:"koshihikari",past:40,forecast:80,wind:18,gdd:900});
+// URL クエリで初期値を渡せる（例: ?pref=茨城&variety=koshihikari&past=40&forecast=80&wind=18&gdd=900）。不正値は既定値のまま
+const q=new URLSearchParams(location.search);
+function qnum(k,def,id){const s=q.get(k);if(s===null||s.trim()==="")return def;const v=Number(s),e=$(id);return(isFinite(v)&&v>=+e.min&&v<=+e.max)?v:def;}
+const qp=q.get("pref"),qv=q.get("variety");
+setInputs({pref:(qp&&qp in P.pref)?qp:"茨城",variety:(qv&&qv in D.variety_ja)?qv:"koshihikari",
+  past:qnum("past",40,"past"),forecast:qnum("forecast",80,"fc"),wind:qnum("wind",18,"wind"),gdd:qnum("gdd",900,"gdd")});
 update();
 })();
 </script>
