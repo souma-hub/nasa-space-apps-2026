@@ -8,7 +8,10 @@ NASA Space Apps Challenge 2026（2026-11-14〜15）の練習と本番用のリ�
 - `PLAN.md`: 本番のタイムテーブル、Claude の利用リソース、進め方（SDD・仮）
 - `TEAM.md`: チーム登録用のディスクリプション（日本語版と英語版）
 - `lodging_s1.py`: Sentinel-1 で水田の倒伏前後の変化を、前年同期と比べる
+- `fetch_fude.py`: 筆ポリゴン（田）を範囲指定で取得し `data/` に保存する
+- `lodging_parcel.py`: 筆ポリゴンの区画ごとに Sentinel-1 を平均して変化を比べる
 - `results/`: 解析結果の図
+- `data/`: 取得したデータ（コミットしない）
 - `apod.py`: APOD（毎日の天文写真）を取得して表示する
 - `neows.py`: NeoWs（地球に近づく小惑星）を取得して表にする
 - `nasa_common.py`: API キーの読み込みや出力の UTF-8 固定など、共通処理

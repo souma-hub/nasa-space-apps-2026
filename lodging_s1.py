@@ -65,9 +65,9 @@ def load_db(cat, bbox, orbit, year, res, smooth):
         v = np.nan_to_num(ds[b].values, nan=0.0)
         if smooth > 1:  # スペックル低減: 線形値で移動平均してから dB にする
             v = uniform_filter(v, size=(1, smooth, smooth))
-        out[b] = db(v)
+        out[b] = db(v) if smooth >= 1 else v  # smooth=0 は線形値のまま返す
     md = [str(x)[5:10] for x in ds.time.values]
-    return out["vv"], out["vh"], md
+    return out["vv"], out["vh"], md, ds.odc.geobox
 
 
 def paddy_mask(vv, vh, md):
@@ -118,13 +118,13 @@ def main():
     cat = pystac_client.Client.open(STAC, modifier=planetary_computer.sign_inplace)
     for orbit in a.orbits:
         print(f"== 軌道 {orbit}", flush=True)
-        vv, vh, md = load_db(cat, a.bbox, orbit, a.year, a.res, a.smooth)
+        vv, vh, md, _ = load_db(cat, a.bbox, orbit, a.year, a.res, a.smooth)
         mask = paddy_mask(vv, vh, md)
         print(f"  水田画素（{a.year} 判定）: {mask.sum():,} / {mask.size:,}（{mask.mean():.0%}）")
         res = changes(vv, vh, md, PAIRS[(a.year, orbit)])
         summarize(f"{a.year} 年", res, mask)
 
-        cvv, cvh, cmd = load_db(cat, a.bbox, orbit, a.control_year, a.res, a.smooth)
+        cvv, cvh, cmd, _ = load_db(cat, a.bbox, orbit, a.control_year, a.res, a.smooth)
         cres = changes(cvv, cvh, cmd, PAIRS[(a.control_year, orbit)])
         summarize(f"{a.control_year} 年（対照）", cres, mask)
 
