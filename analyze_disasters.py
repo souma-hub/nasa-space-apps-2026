@@ -49,6 +49,8 @@ def best_track(cache=Path("data/bst_all.txt")):
         if cur is None or len(f) < 5:
             continue
         t = pd.to_datetime(f[0], format="%y%m%d%H")
+        if t.year > 2050:  # 2 桁の年は 69 未満が 20xx と読まれる。ベストトラックは 1951 年からなので直す
+            t = t.replace(year=t.year - 100)
         lat, lon = int(f[3]) / 10, int(f[4]) / 10
         rows.append((cur, t, lat, lon))
     b = pd.DataFrame(rows, columns=["id", "time", "lat", "lon"])
