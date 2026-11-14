@@ -38,12 +38,19 @@ ERA = {"平成": 1988, "令和": 2018}
 
 
 def list_ids(c, only=None):
-    """被害調査の公表年ごとの一覧（tclass3）を全部たどって、ファイル ID を集める。"""
+    """被害調査の公表年ごとの一覧（tclass3）を全部たどって、ファイル ID と、その一覧の年を集める。
+
+    2004・2006・2007 年などの表には年の記載がないため、一覧の題名（例:「平成20年農作物災害種類別被害統計」）
+    から年を取り、{ファイル ID: 年} として返す。
+    """
     r = c.get(SEARCH, params={k: v for k, v in CLASS.items() if k != "tclass4val"})
     classes = list(dict.fromkeys(re.findall(r"tclass3=(\d+)", r.text)))
+    # tclass3 ごとの題名から年を取る（data-value3="..." の後ろに題名がある。数字は全角のこともある）
+    class_year = {m.group(1): ERA[m.group(2)] + (1 if m.group(3) == "元" else int(m.group(3)))
+                  for m in re.finditer(r'data-value3="(\d+)">.{0,400}?(平成|令和)(\d+|元)年', r.text, re.S)}
     if only:
         classes = [x for x in classes if x in only]
-    ids = []
+    ids, id_year = [], {}
     for t3 in classes:
         for page in range(1, 50):
             r = c.get(SEARCH, params={**CLASS, "tclass3": t3, "layout": "datalist", "page": page})
@@ -52,7 +59,10 @@ def list_ids(c, only=None):
             if not new:
                 break
             ids += new
-    return ids
+            for i in new:
+                if t3 in class_year:
+                    id_year[i] = class_year[t3]
+    return ids, id_year
 
 
 def clean(x):
@@ -64,20 +74,24 @@ def num(x):
     return float(m.group(0)) if m else 0.0  # 「-」「…」は 0 とみなす
 
 
-def parse_sheet(df, prefs=PREFS):
-    """1 枚のシートから (年, 災害名, 水稲の列があるか, {県: 水稲被害面積 ha}) を返す。災害の表でなければ None。"""
+def parse_sheet(df, prefs=PREFS, year_hint=None):
+    """1 枚のシートから (年, 災害名, 水稲の列があるか, {県: 水稲被害面積 ha}) を返す。災害の表でなければ None。
+
+    year_hint: シートに年の記載がないとき（2004・2006・2007 年の表など）に使う年（e-Stat の一覧の年）。
+    """
     raw = [str(v).strip() for v in df.iloc[:12].values.ravel() if str(v) != "nan"]
     top = [clean(v) for v in raw]
     # 表番号（表１－19 など）の後ろの空白で区切って災害名を取る（空白を消すと月の数字とくっつくため）
     title = next((m.group(1) for t in raw
                   if (m := re.match(r"^表\s*[\d０-９]+\s*[－\-]\s*[\d０-９]+[\s\u3000]+(.+)$", t))), None)
     yr = next((re.search(r"(平成|令和)(\d+|元)年", t) for t in top if re.search(r"(平成|令和)(\d+|元)年", t)), None)
-    if not title or not yr:
+    if not title or not (yr or year_hint):
         return None
-    year = ERA[yr.group(1)] + (1 if yr.group(2) == "元" else int(yr.group(2)))
+    year = ERA[yr.group(1)] + (1 if yr.group(2) == "元" else int(yr.group(2))) if yr else year_hint
     # 大きな災害（台風第15号など）は「２ 台風第15号による農作物被害」の行に災害名があり、
     # 表題は「類別被害概況…」のように共通なので、災害名の行を優先する
-    ev = next((t for t in raw if "による農作物被害" in t), None)
+    # 2007 年の「台風第４号及び梅雨前線による大雨の農作物被害」のように「の農作物被害」で終わる名前もある
+    ev = next((t for t in raw if "による農作物被害" in t or re.search(r"の農作物被害$", t)), None)
     table = clean(title)
     name = clean(re.sub(r"^[\d０-９]+[\s\u3000]+", "", ev)) if ev else table
     # 作物名の行と、水稲の列を探す
@@ -122,23 +136,36 @@ def main():
     p = argparse.ArgumentParser(description="災害ごとの水稲被害（茨城・千葉）を集める")
     p.add_argument("--only", nargs="*", help="tclass3 を限定（試験用）")
     p.add_argument("--all-prefs", action="store_true", help="全都道府県を抜き出す（全国モデル用）")
+    p.add_argument("--offline", action="store_true",
+                   help="data/estat_cache のファイルだけで作り直す（年は id_year.csv を使う）")
     p.add_argument("--out", default="data/disaster_damage.csv")
     a = p.parse_args()
     rows = []
     prefs = ALL_PREFS if a.all_prefs else PREFS
     cache = Path("data/estat_cache")
     cache.mkdir(parents=True, exist_ok=True)
+    year_file = cache / "id_year.csv"  # {ファイル ID: 一覧の年}。ネットなしで再解析するときに使う
     with httpx.Client(timeout=60, follow_redirects=True) as c:
-        for i in range(5):
-            try:
-                ids = list_ids(c, a.only)
-                break
-            except httpx.HTTPError as e:
-                print(f"  一覧の再試行 {i + 1}: {e}", file=sys.stderr)
-                time.sleep(2 ** i)
-        print(f"表のファイル: {len(ids)} 個", flush=True)
+        if a.offline:
+            # キャッシュ済みのファイルだけで作り直す（ネットに取りに行かない）
+            ids = [p.stem for p in sorted(cache.glob("*.bin"))]
+            id_year = ({k: int(v) for k, v in pd.read_csv(year_file, dtype=str).values}
+                       if year_file.exists() else {})
+        else:
+            for i in range(5):
+                try:
+                    ids, id_year = list_ids(c, a.only)
+                    break
+                except httpx.HTTPError as e:
+                    print(f"  一覧の再試行 {i + 1}: {e}", file=sys.stderr)
+                    time.sleep(2 ** i)
+            old = ({k: int(v) for k, v in pd.read_csv(year_file, dtype=str).values}
+                   if year_file.exists() else {})
+            pd.DataFrame(sorted({**old, **id_year}.items()), columns=["statInfId", "year"]).to_csv(
+                year_file, index=False)
+        print(f"表のファイル: {len(ids)} 個（一覧の年が分かるもの {sum(i in id_year for i in ids)} 個）", flush=True)
         for n, sid in enumerate(ids, 1):
-            content = download(c, sid, cache)
+            content = (cache / f"{sid}.bin").read_bytes() if a.offline else download(c, sid, cache)
             if content is None:
                 continue
             try:
@@ -146,7 +173,7 @@ def main():
             except Exception:
                 continue
             for df in sheets.values():
-                got = parse_sheet(df, prefs)
+                got = parse_sheet(df, prefs, id_year.get(sid))
                 if not got:
                     continue
                 year, name, table, has_rice, vals = got
@@ -156,7 +183,10 @@ def main():
                                  "rice_area_ha": vals.get(pref, 0.0), "statInfId": sid})
             if n % 25 == 0:
                 print(f"  {n} / {len(ids)}", flush=True)
-    df = pd.DataFrame(rows).drop_duplicates(["year", "disaster", "table", "pref"])
+    # 2006 年などは 1 つの表が作物ごとのファイルに分かれている（同じ表名で「総数」「水陸稲」…）。
+    # 水稲の列があるファイルを優先して残す（以前は最初のファイル＝総数が残り、水稲が欠けていた）
+    df = (pd.DataFrame(rows).sort_values("table_has_rice", ascending=False, kind="stable")
+          .drop_duplicates(["year", "disaster", "table", "pref"]))
     out = Path(a.out)
     out.parent.mkdir(exist_ok=True)
     df.sort_values(["year", "disaster", "pref"]).to_csv(out, index=False)
