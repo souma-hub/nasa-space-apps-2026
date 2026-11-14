@@ -8,9 +8,9 @@
 - rain_mm: 嵐の前後 4 日の雨（過去 2 日は GPM IMERG、これから 2 日は GEOS-FP の予報）
 - gdd: 選んだ品種の出穂後積算気温（NASA POWER の気温から phenology.py で推定）
 
-モデル（results/early_harvest_typhoons.csv の 2004〜2021 年の台風 22 個で決めた）:
+モデル（results/early_harvest_typhoons.csv の 2004〜2021 年の台風 23 個で決めた）。現在は比較用で、採用は統一モデル（lodging_unified.py）:
 1. 規則: rain_mm ≥ RAIN_MM × 品種の係数 × 予報の余裕 かつ gdd ≥ GDD なら「刈る」
-   - 1 つ抜きの検証で、被害ありの見逃し 1/6、被害なし 16 個のうち 8 個で「待ってよい」
+   - 1 つ抜きの検証で、被害ありの見逃し 1/7、被害なし 16 個のうち 8 個で「待ってよい」
    - 風（POWER）は足すと悪化したので使わない（NASA の風は台風の突風を表せない）
 2. ロジスティック回帰: 同じ 2 つの入力で「被害が出る確率」を表示用に出す
 
@@ -40,7 +40,7 @@ COEF_PATH = Path("results/lodging_logistic.json")
 
 
 def fit_logistic(csv="results/early_harvest_typhoons.csv", out=COEF_PATH):
-    """台風 22 個でロジスティック回帰を学習し、係数を JSON に保存する。"""
+    """台風 23 個でロジスティック回帰を学習し、係数を JSON に保存する。"""
     import pandas as pd
     from sklearn.linear_model import LogisticRegression
 

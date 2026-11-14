@@ -2,7 +2,7 @@
 # requires-python = ">=3.12"
 # dependencies = ["httpx", "python-dotenv", "pandas", "numpy", "scipy"]
 # ///
-"""22 台風の表（results/early_harvest_typhoons.csv）で、被害あり／なしの差を検定する。発表の解析スライド用。
+"""台風の表（23 個）（results/early_harvest_typhoons.csv）で、被害あり／なしの差を検定する。発表の解析スライド用。
 
 - 雨（NASA IMERG・POWER）、風（NASA POWER）、最大瞬間風速（気象庁アメダス、地上）、出穂後の積算気温を、
   被害あり（6）と被害なし（16）で比べる（片側 Mann-Whitney U、被害あり ＞ なし）
