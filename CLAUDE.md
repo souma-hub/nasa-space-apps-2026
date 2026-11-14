@@ -10,6 +10,9 @@ NASA Space Apps Challenge 2026（2026-11-14〜15）の練習と本番用のリ�
 - `lodging_s1.py`: Sentinel-1 で水田の倒伏前後の変化を、前年同期と比べる
 - `fetch_fude.py`: 筆ポリゴン（田）を範囲指定で取得し `data/` に保存する
 - `lodging_parcel.py`: 筆ポリゴンの区画ごとに Sentinel-1 を平均して変化を比べる
+- `events.csv`: 倒伏イベントの一覧（期間・地域・確度・出典）。ネットの情報から手で追記する
+- `build_dataset.py`: NASA POWER の時間値と events.csv から学習用データ（`data/dataset.csv`, `data/sequences.npz`）を作る
+- `analyze_threshold.py`: 倒伏あり／報告なしの日で気象を検定し、閾値の材料を出す
 - `results/`: 解析結果の図
 - `data/`: 取得したデータ（コミットしない）
 - `apod.py`: APOD（毎日の天文写真）を取得して表示する
