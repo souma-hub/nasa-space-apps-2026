@@ -35,6 +35,8 @@ NASA Space Apps Challenge 2026（2026-11-14〜15）の練習と本番用のリ�
 - `analyze_episodes.py`: 嵐ごとに、倒伏の報告がある嵐の位置と検定を出す
 - `build_japan_dataset.py`: 全国版の学習用データ「都道府県 × 台風」（2004〜2021 年 8〜9 月、500 km 以内）を作る。水稲被害面積と IMERG の雨・POWER の気温と風を付けて `data/japan_typhoon_dataset.csv` に保存
 - `docs/report.md`: 解析とモデルの報告（茨城・千葉 → 全国 → 統一モデル → デモ → 結論）
+- `docs/review-fable-5.2.md`: 別モデル（Claude Fable 5.2）によるリポジトリ全体のレビュー（実装・発表・検証・解析・予測・マイコン。2026-11-14）
+- `analyze_planting.py`: 品種と田植え日の 3 通り以上の作付け戦略で、稲の弱い時期に台風が重なった回数を過去の台風で比べる（`results/planting_report.txt`）
 - `results/`: 解析結果の図とレポート
 - `data/`: 取得したデータ（コミットしない）
 - `apod.py`: APOD（毎日の天文写真）を取得して表示する
