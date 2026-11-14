@@ -26,6 +26,7 @@ missing 1 of 7.
 It even runs on a Raspberry Pi Pico.
 Next: comparing planting choices, for any region and crop.
 ```
+- 試作版（`make_promo.py`）の最終行: "It shows when current crops are most vulnerable, and compares planting strategies."（お題の文言に寄せた差し替え。未承認）。読み上げが長いため「GPM IMERG rainfall and NASA POWER wind and temperature」は読み上げから外し、画面の文字のみ
 - メンバーの名前を入れるかはオーナーが決める（入れるなら冒頭）
 - 30 秒に収まらなければ、「GPM IMERG rainfall and NASA POWER wind and temperature」を画面の文字だけにして読み上げから外す
 - 誇張しない（「未熟＝青い稲」のような表現はしない。「fully ripe」まで）
@@ -45,6 +46,7 @@ Next: comparing planting choices, for any region and crop.
 - 字幕（英語）は焼き込む。無音でも内容が分かるようにする
 
 ## 作り方（案）
+- 試作版は Windows の SAPI（Microsoft Zira、英語）で音声を生成し、`python make_promo.py` で `out/promo_draft.mp4` を作る（話速は 29.5 秒以内に収まるよう自動調整、ネットからのダウンロードなし）。Pillow でフレームを描画して ffmpeg に渡す方式。MP4 の comment に "Narration: AI-generated text-to-speech (Windows SAPI)" を入れてある。以下の Piper 案は未使用
 - 文字カード: Pillow で 1920×1080 の PNG を生成（フォントは Noto Serif / Noto Sans）
 - 音声: 英語 TTS。品質順に検討（使えるものを使う）: Piper（オフライン、en_US の声） > espeak-ng（最終手段）。音声の長さに合わせて各カットの秒数を調整し、合計 30 秒以内
 - 合成: ffmpeg（`-loop 1` の静止画 + `zoompan` で軽い動き、`xfade` でつなぐ、音声を合わせて `-shortest`）
