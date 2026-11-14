@@ -28,6 +28,11 @@ CLASS = {"toukei": "00500215", "tstat": "000001013427", "cycle": 7,
 DOWNLOAD = "https://www.e-stat.go.jp/stat-search/file-download"
 QUERY = "農作物災害種類別被害統計"
 PREFS = ["茨城", "千葉"]
+ALL_PREFS = ["北海道", "青森", "岩手", "宮城", "秋田", "山形", "福島", "茨城", "栃木", "群馬", "埼玉",
+             "千葉", "東京", "神奈川", "新潟", "富山", "石川", "福井", "山梨", "長野", "岐阜", "静岡",
+             "愛知", "三重", "滋賀", "京都", "大阪", "兵庫", "奈良", "和歌山", "鳥取", "島根", "岡山",
+             "広島", "山口", "徳島", "香川", "愛媛", "高知", "福岡", "佐賀", "長崎", "熊本", "大分",
+             "宮崎", "鹿児島", "沖縄"]
 RICE = re.compile(r"^(水稲|水陸稲)$")
 ERA = {"平成": 1988, "令和": 2018}
 
@@ -59,7 +64,7 @@ def num(x):
     return float(m.group(0)) if m else 0.0  # 「-」「…」は 0 とみなす
 
 
-def parse_sheet(df):
+def parse_sheet(df, prefs=PREFS):
     """1 枚のシートから (年, 災害名, 水稲の列があるか, {県: 水稲被害面積 ha}) を返す。災害の表でなければ None。"""
     raw = [str(v).strip() for v in df.iloc[:12].values.ravel() if str(v) != "nan"]
     top = [clean(v) for v in raw]
@@ -88,7 +93,7 @@ def parse_sheet(df):
     for _, row in df.iterrows():
         cells = [clean(v) for v in row.tolist()]
         for k, v in enumerate(cells):
-            if v in PREFS:
+            if v in prefs:
                 out[v] = num(row.iloc[rice_col]) if rice_col is not None else float("nan")
     return year, name, table, rice_col is not None, out
 
@@ -116,9 +121,11 @@ def download(c, sid, cache):
 def main():
     p = argparse.ArgumentParser(description="災害ごとの水稲被害（茨城・千葉）を集める")
     p.add_argument("--only", nargs="*", help="tclass3 を限定（試験用）")
+    p.add_argument("--all-prefs", action="store_true", help="全都道府県を抜き出す（全国モデル用）")
     p.add_argument("--out", default="data/disaster_damage.csv")
     a = p.parse_args()
     rows = []
+    prefs = ALL_PREFS if a.all_prefs else PREFS
     cache = Path("data/estat_cache")
     cache.mkdir(parents=True, exist_ok=True)
     with httpx.Client(timeout=60, follow_redirects=True) as c:
@@ -139,11 +146,11 @@ def main():
             except Exception:
                 continue
             for df in sheets.values():
-                got = parse_sheet(df)
+                got = parse_sheet(df, prefs)
                 if not got:
                     continue
                 year, name, table, has_rice, vals = got
-                for pref in PREFS:
+                for pref in prefs:
                     rows.append({"year": year, "disaster": name, "table": table, "pref": pref,
                                  "listed": pref in vals, "table_has_rice": has_rice,
                                  "rice_area_ha": vals.get(pref, 0.0), "statInfId": sid})
