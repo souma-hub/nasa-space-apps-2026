@@ -109,6 +109,25 @@ def sequences(h, days):
     return out
 
 
+def power_daily_t2m(lat, lon, first, last, cache):
+    """NASA POWER の日平均気温（5〜9 月）。生育段階の推定に使う。"""
+    if cache.exists():
+        t = pd.read_csv(cache, parse_dates=["date"]).set_index("date")["T2M"]
+        if set(range(first, last + 1)) <= set(t.index.year):
+            return t
+    r = httpx.get("https://power.larc.nasa.gov/api/temporal/daily/point",
+                  params={"parameters": "T2M", "community": "AG", "latitude": lat,
+                          "longitude": lon, "start": f"{first}0101", "end": f"{last}0930",
+                          "format": "JSON"}, timeout=300)
+    r.raise_for_status()
+    t = pd.Series(r.json()["properties"]["parameter"]["T2M"])
+    t.index = pd.to_datetime(t.index, format="%Y%m%d")
+    t = t.replace(-999.0, np.nan).interpolate()
+    t = t[(t.index.month >= 5) & (t.index.month <= 9)]
+    t.rename("T2M").rename_axis("date").to_frame().to_csv(cache)
+    return t
+
+
 def amedas_features(path):
     """アメダス日別値（data/amedas_daily.csv）を地域の日別特徴量にまとめる。
 
@@ -179,6 +198,12 @@ def main():
     if am.exists():  # fetch_amedas.py で取得済みなら、地点の最大風速・最大瞬間風速を足す
         ds = ds.merge(amedas_features(am), left_on="date", right_index=True, how="left")
         print(f"アメダスの特徴量を追加（最大瞬間風速あり {ds.am_gust_max.notna().sum():,} 日）")
+    # 生育段階（品種別の出穂後積算気温と、倒れやすい田の割合）。phenology.py の仮定は要確認
+    from phenology import stage_features
+    lat, lon = next(iter(REGIONS.values()))
+    t2m = power_daily_t2m(lat, lon, years[0], years[-1], Path(a.out) / "power_daily_t2m.csv")
+    ds = ds.merge(stage_features(t2m), left_on="date", right_index=True, how="left")
+    print(f"生育段階を追加（コシヒカリの推定出穂日の平均: 年の {ds.heading_koshihikari_doy.mean():.0f} 日目）")
     im = Path(a.out) / "imerg_daily.csv"
     if im.exists():  # fetch_imerg.py で取得済みなら、NASA GPM IMERG の雨（0.1°）を足す
         g = pd.read_csv(im, parse_dates=["date"]).set_index("date").sort_index()

@@ -101,6 +101,8 @@ def download(c, sid, cache):
     for i in range(5):
         try:
             r = c.get(DOWNLOAD, params={"statInfId": sid, "fileKind": 0})
+            if 400 <= r.status_code < 500:  # 存在しない・データベース形式などは再試行しない
+                return None
             r.raise_for_status()
             f.write_bytes(r.content)
             time.sleep(0.4)
