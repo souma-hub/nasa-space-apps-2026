@@ -41,3 +41,10 @@
 - RPI-RP2 が出ない → ケーブルを替える。BOOTSEL を押したまま挿しているか確認する
 - Thonny が Pico を見つけない → 右下のインタプリタを「MicroPython (Raspberry Pi Pico)」にし、ポートを選び直す。USB を挿し直す
 - 日本語が化ける → Thonny のシェルは UTF-8 で表示できるので、通常は化けない。化けたら英語表示に切り替えるので知らせる
+
+## 実機での確認（2026-11-14）
+- 機材: Raspberry Pi Pico H（RP2040）、MicroPython v1.29.0（`RPI_PICO-20260824-v1.29.0.uf2`）
+- 書き込みと実行は Thonny の代わりに `mpremote` でもできる（インストール不要: `uvx mpremote connect COM3 run pico/main.py`、保存は `uvx mpremote connect COM3 cp pico/main.py :main.py`。COM 番号は PC ごとに違う）
+- 結果: 10 シナリオすべてで、判断と確率（% 表示）が PC 版 `demo_lodging.py` と一致
+- 計算時間: 1 回 0.6〜1.2 ms。空きメモリ 221,808 バイト（RAM 264 KB のうち）
+- `main.py` として Pico に保存済み。USB 電源をつなぐだけで LED のデモが動く

@@ -50,3 +50,9 @@ API キーの置き方（`apod.py --legacy` と `neows.py` が使う。未設定
 - DONKI の移行先（CCMC 側に移ったかは未確認）
 - 上の各 API が今も提供されているか（終了・移行したものがありうる。状況欄は 2026-11-09 時点）
 - NASA Space Apps Challenge 2026 は 2026-11-14〜15 とのこと（第三者情報、公式サイトは未確認）。日程・課題・チームの条件も要確認
+
+## 発表用デモ画面
+統一モデルの「刈る／待ってよい」判断を、ブラウザで動かして見せる 1 ファイル完結の画面（外部通信なし、オフラインで動く）。
+- 作る: `uv run make_demo.py`（`results/unified_model.json`・`results/unified_kanto_loo.csv`・`demo_lodging.py` のシナリオを埋め込んで `docs/demo/index.html` を生成）
+- 開く: `docs/demo/index.html` をブラウザで開く（プロジェクター向け 16:9。入力を動かすと即時に再計算）
+- 検証: `uv run check_demo.py`（JS の判定が Python の `decide()` と一致するかを node で確認）
