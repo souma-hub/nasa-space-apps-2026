@@ -1,8 +1,9 @@
-start,end,region,label,confidence,cause,note,source
-2026-08-11,2026-08-14,ibaraki_south,1,high,台風15号（8/11 20時ごろ茨城県南部に上陸）と 8/13〜14 の大雨,友人の米農家の倒伏被害（本人の証言）。周辺の田も被害,https://www.data.jma.go.jp/mito/report/kishoujishin/629_08k.pdf
-2026-08-11,2026-08-14,chiba_north,1,high,台風15号と 8/13〜14 の千葉豪雨,千葉県の資料（2026-08-19）に「稲の冠水や倒伏などがみられました」,https://www.pref.chiba.lg.jp/nousui/nousaigaisien/documents/260819rice.pdf
-2026-09-18,2026-09-24,ibaraki_south,1,medium,台風25号（気象データ上の嵐は 9/18〜21）,茨城の農業被害は県南・県西の水稲などが中心（倒伏か冠水かは未確認）,https://www.pref.ibaraki.jp/houdou/pdf/20261008/261008nougyokeiei.pdf
-2026-09-18,2026-09-24,chiba_north,1,medium,台風25号（気象データ上の嵐は 9/18〜21）,印旛沼の決壊で水田が冠水。成田市では倒伏が見られない水田もあったとの報道,https://www.agrinews.co.jp/society/index/408711
-2023-09-08,2023-09-09,chiba_north,1,medium,台風13号,内閣府の被害報で千葉県に「水稲の倒伏」の記載,https://www.bousai.go.jp/updates/r5typhoon13/pdf/r5typhoon13_02.pdf
-2019-09-08,2019-09-09,chiba_north,1,low,台風15号（房総半島台風）,関東の農作物被害 745.7 億円（千葉・茨城中心）。水稲の倒伏の内訳は未確認,https://wwwtb.mlit.go.jp/kanto/content/000167397.pdf
-2019-09-08,2019-09-09,ibaraki_south,1,low,台風15号（房総半島台風）,同上,https://wwwtb.mlit.go.jp/kanto/content/000167397.pdf
+start,end,region,lodging,flooding,confidence,cause,note,source
+2026-08-11,2026-08-14,ibaraki_south,yes,unknown,high,台風15号（8/11 20時ごろ茨城県南部に上陸）と 8/13〜14 の大雨,友人の米農家の倒伏被害（本人の証言）。周辺の田も被害,https://www.data.jma.go.jp/mito/report/kishoujishin/629_08k.pdf
+2026-08-11,2026-08-14,chiba_north,yes,yes,high,台風15号と 8/13〜14 の千葉豪雨,千葉県の資料（2026-08-19）に「稲の冠水（株全体が水没）や倒伏などがみられました」,https://www.pref.chiba.lg.jp/nousui/nousaigaisien/documents/260819rice.pdf
+2026-09-18,2026-09-24,ibaraki_south,unknown,unknown,medium,台風25号（気象データ上の嵐は 9/18〜21）,茨城の農業被害は県南・県西の水稲などが中心（倒伏か冠水かは資料が 404 で未確認）,https://www.pref.ibaraki.jp/houdou/pdf/20261008/261008nougyokeiei.pdf
+2026-09-18,2026-09-24,chiba_north,unknown,yes,high,台風25号（気象データ上の嵐は 9/18〜21）,印旛沼の決壊で成田市などの水田が冠水。倒伏の記述は見つからない,https://www.agrinews.co.jp/society/index/408711
+2023-09-08,2023-09-09,chiba_north,yes,yes,high,台風13号,内閣府の被害報（9/12）に千葉県「水稲の倒伏」「水田、大豆畑の冠水」,https://www.bousai.go.jp/updates/r5typhoon13/pdf/r5typhoon13_02.pdf
+2023-09-08,2023-09-09,ibaraki_south,unknown,yes,high,台風13号,内閣府の被害報に茨城県「水稲、大豆等、水田の冠水被害」。龍ケ崎市で広域冠水の排水作業。倒伏の記述なし,https://www.bousai.go.jp/updates/r5typhoon13/pdf/r5typhoon13_02.pdf
+2019-09-08,2019-09-09,chiba_north,yes,unknown,medium,台風15号（房総半島台風）,関東農政局の資料に千葉県の被害写真「水稲の倒伏」,https://wwwtb.mlit.go.jp/kanto/content/000167397.pdf
+2019-09-08,2019-09-09,ibaraki_south,unknown,unknown,low,台風15号（房総半島台風）,関東農政局の資料で茨城県は「農作物の茎葉の損傷及び落果」。水稲の記述なし,https://wwwtb.mlit.go.jp/kanto/content/000167397.pdf

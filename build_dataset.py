@@ -145,10 +145,18 @@ def main():
     years = list(range(a.first_year, a.last_year + 1))
     ev = pd.read_csv(a.events, parse_dates=["start", "end"])
     ev["region"] = ev["region"].map(REGION_OF).fillna(ev["region"])
-    # 同じ格子の同じ期間は 1 つにまとめ、確度は高い方を採る
+    # 同じ格子の同じ期間は 1 つにまとめる。倒伏・冠水は yes が 1 つでもあれば yes、
+    # なければ unknown が 1 つでもあれば unknown、全部 no のときだけ no。確度は高い方を採る
     rank = {"high": 0, "medium": 1, "low": 2}
+
+    def merge_flag(s):
+        return "yes" if (s == "yes").any() else "unknown" if (s == "unknown").any() else "no"
+
     ev = (ev.assign(_r=ev.confidence.map(rank)).sort_values("_r")
-            .drop_duplicates(["start", "end", "region"]).drop(columns="_r"))
+            .groupby(["start", "end", "region"], as_index=False)
+            .agg(lodging=("lodging", merge_flag), flooding=("flooding", merge_flag),
+                 confidence=("confidence", "first"), cause=("cause", "first")))
+    flag = {"yes": 1.0, "no": 0.0, "unknown": np.nan}
 
     rows, seqs = [], []
     for name, (lat, lon) in REGIONS.items():
@@ -156,10 +164,14 @@ def main():
         d = daily_features(h)
         md = d.index.strftime("%m-%d")
         d = d[(md >= SEASON[0]) & (md <= SEASON[1])].copy()
-        d["region"], d["label"], d["confidence"], d["cause"] = name, 0, "", ""
+        # label: 倒伏（1=あり, 0=報告なし, NaN=被害はあったが倒伏かどうか不明）
+        # flood: 冠水（同じ規則）、damage: 何らかの水稲被害の報告がある期間
+        d["region"], d["confidence"], d["cause"] = name, "", ""
+        d["label"], d["flood"], d["damage"] = 0.0, 0.0, 0
         for e in ev[ev.region == name].itertuples():
             m = (d.index >= e.start) & (d.index <= e.end)
-            d.loc[m, ["label", "confidence", "cause"]] = [1, e.confidence, e.cause]
+            d.loc[m, ["label", "flood", "damage", "confidence", "cause"]] = [
+                flag[e.lodging], flag[e.flooding], 1, e.confidence, e.cause]
         rows.append(d)
         seqs.append(sequences(h, d.index))
     ds = pd.concat(rows).rename_axis("date").reset_index()
@@ -172,7 +184,8 @@ def main():
     np.savez_compressed(out / "sequences.npz", x=x, y=ds["label"].values,
                         date=ds["date"].astype(str).values, region=ds["region"].values,
                         cols=np.array(SEQ_COLS))
-    print(f"保存: {out / 'dataset.csv'}（{len(ds):,} 行、倒伏あり {ds.label.sum()} 日）")
+    print(f"保存: {out / 'dataset.csv'}（{len(ds):,} 行、倒伏あり {int((ds.label == 1).sum())} 日、"
+          f"倒伏不明 {int(ds.label.isna().sum())} 日、冠水あり {int((ds.flood == 1).sum())} 日）")
     print(f"保存: {out / 'sequences.npz'}（{x.shape}）")
 
 
