@@ -109,6 +109,30 @@ def sequences(h, days):
     return out
 
 
+def amedas_features(path):
+    """アメダス日別値（data/amedas_daily.csv）を地域の日別特徴量にまとめる。
+
+    風は地点の最大値（どこか 1 か所でも強ければ倒れうる）と中央値（地域全体の強さ）を両方持つ。
+    """
+    a = pd.read_csv(path, parse_dates=["date"])
+    g = a.groupby("date")
+    d = pd.DataFrame({
+        "am_gust_max": g["gust"].max(),
+        "am_gust_med": g["gust"].median(),
+        "am_wsmax_max": g["ws_max"].max(),
+        "am_wsmax_med": g["ws_max"].median(),
+        "am_rain_mean": g["rain_sum"].mean(),
+        "am_rain_1h_max": g["rain_1h"].max(),
+    }).sort_index()
+    # 72 時間（3 日）の積み上げ。年をまたいで窓がつながらないよう、年ごとに計算する
+    yr = d.index.year
+    d["am_rain_72h"] = d.groupby(yr)["am_rain_mean"].transform(lambda s: s.rolling(3, 1).sum())
+    d["am_gust_max_72h"] = d.groupby(yr)["am_gust_max"].transform(lambda s: s.rolling(3, 1).max())
+    d["am_wsmax_max_72h"] = d.groupby(yr)["am_wsmax_max"].transform(
+        lambda s: s.rolling(3, 1).max())
+    return d
+
+
 def main():
     p = argparse.ArgumentParser(description="倒伏の学習用データを作る")
     p.add_argument("--first-year", type=int, default=2001)
@@ -139,6 +163,10 @@ def main():
         rows.append(d)
         seqs.append(sequences(h, d.index))
     ds = pd.concat(rows).rename_axis("date").reset_index()
+    am = Path(a.out) / "amedas_daily.csv"
+    if am.exists():  # fetch_amedas.py で取得済みなら、地点の最大風速・最大瞬間風速を足す
+        ds = ds.merge(amedas_features(am), left_on="date", right_index=True, how="left")
+        print(f"アメダスの特徴量を追加（最大瞬間風速あり {ds.am_gust_max.notna().sum():,} 日）")
     ds.to_csv(out / "dataset.csv", index=False)
     x = np.concatenate(seqs)
     np.savez_compressed(out / "sequences.npz", x=x, y=ds["label"].values,
