@@ -95,6 +95,39 @@ def loo(nat, kt):
     return yk, out, harvest, np.array(coefs)
 
 
+def export(full, w, nat, kt, off, out=Path("results/unified_model.json")):
+    """実行時（lodging_unified.py）に使う係数と閾値を JSON に保存する。numpy だけで動かせるように。"""
+    import json
+    coef = full.m.coef_[0]
+    z_nat = full.m.decision_function(full._x(nat.lrain, nat.ws10m_max_3d, nat.pref))
+    p_nat = 1 / (1 + np.exp(-z_nat))
+    y_nat = nat.damaged.astype(int).values
+    z_loc = off + w[0] + w[1] * kt.ripe.values
+    p_loc = 1 / (1 + np.exp(-z_loc))
+    y_loc = kt["被害あり"].astype(int).values
+    params = {
+        "description": "logit P = intercept + b_rain·(log1p(雨)−mu)/sd + b_wind·(風−mu)/sd + 県の補正 [+ 地域の追加項]",
+        "intercept": float(full.m.intercept_[0]),
+        "rain": {"mu": float(full.mu[0]), "sd": float(full.sd[0]), "coef": float(coef[0])},
+        "wind": {"mu": float(full.mu[1]), "sd": float(full.sd[1]), "coef": float(coef[1])},
+        "pref": {p: float(c) for p, c in zip(full.prefs, coef[2:])},
+        # 全国の閾値: 学習データの被害ありの 95% を拾う確率
+        "threshold_national": float(np.quantile(p_nat[y_nat == 1], 0.05)),
+        "local": {
+            "茨城・千葉": {"prefs": list(LOCAL_PREFS), "d": float(w[0]), "e_ripe": float(w[1]),
+                         "gdd_window": [GDD, GDD_HARVESTED],
+                         # 地域の閾値: 茨城・千葉の台風で被害ありの見逃し 0 になる最大の確率
+                         "threshold": float(p_loc[y_loc == 1].min()),
+                         "n_typhoons": int(len(kt)), "n_damage": int(y_loc.sum())},
+        },
+        "trained_on": {"national_rows": int(len(nat)), "national_damage": int(y_nat.sum()),
+                       "national_typhoons": int(nat.tid.nunique()), "years": "2004-2021, 8-9 月"},
+    }
+    out.write_text(json.dumps(params, ensure_ascii=False, indent=2))
+    print(f"保存: {out}（全国の閾値 {params['threshold_national']:.3f}、"
+          f"茨城・千葉の閾値 {params['local']['茨城・千葉']['threshold']:.3f}）")
+
+
 def main():
     nat, kt = load()
     yk, prob, harvest, coefs = loo(nat, kt)
@@ -115,6 +148,7 @@ def main():
     off = full.logit(kt["雨IMERG"], kt["風POWER"], LOCAL_PREFS)
     w = fit_local(off, kt.ripe.values, yk)
     print(f"全データで学習した地域の追加項: d {w[0]:+.2f}、e {w[1]:+.2f}")
+    export(full, w, nat, kt, off)
     kt.assign(p_national=prob["全国の部分だけ"], p_unified=prob["全国＋地域の追加項"],
               harvest_unified=harvest["全国＋地域の追加項"]).to_csv("results/unified_kanto_loo.csv", index=False)
 
