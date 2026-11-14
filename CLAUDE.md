@@ -27,6 +27,7 @@ NASA Space Apps Challenge 2026（2026-11-14〜15）の練習と本番用のリ�
 - `review_lodging_model.py`: 茨城・千葉モデルのレビュー（基準・期間を変えた頑健性、並べ替え検定、未知の台風）
 - `analyze_japan.py`: 全国の都道府県×台風で、解析（被害あり／なしの比較）とモデルの比較（台風を 1 つずつ抜く交差検証）をする
 - `analyze_japan_location.py`: 全国モデルに場所の変数（緯度経度・地方・都道府県）を入れる価値を、見分ける力（AUC）と確率の当たり方（Brier・地方ごとの偏り）に分けて比べる
+- `analyze_japan_wind.py`: 全国モデルで、風が台風との距離の代わりにすぎないのかを調べる（雨だけ・雨＋風・雨＋距離などを比べる）
 - `analyze_episodes.py`: 嵐ごとに、倒伏の報告がある嵐の位置と検定を出す
 - `build_japan_dataset.py`: 全国版の学習用データ「都道府県 × 台風」（2004〜2021 年 8〜9 月、500 km 以内）を作る。水稲被害面積と IMERG の雨・POWER の気温と風を付けて `data/japan_typhoon_dataset.csv` に保存
 - `results/`: 解析結果の図とレポート
