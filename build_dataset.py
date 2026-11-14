@@ -179,6 +179,15 @@ def main():
     if am.exists():  # fetch_amedas.py で取得済みなら、地点の最大風速・最大瞬間風速を足す
         ds = ds.merge(amedas_features(am), left_on="date", right_index=True, how="left")
         print(f"アメダスの特徴量を追加（最大瞬間風速あり {ds.am_gust_max.notna().sum():,} 日）")
+    im = Path(a.out) / "imerg_daily.csv"
+    if im.exists():  # fetch_imerg.py で取得済みなら、NASA GPM IMERG の雨（0.1°）を足す
+        g = pd.read_csv(im, parse_dates=["date"]).set_index("date").sort_index()
+        # IMERG の日付は世界時（日本時間より 9 時間遅れ）。嵐単位の分析では許容する
+        f = pd.DataFrame({"imerg_mean": g.imerg_mean, "imerg_max": g.imerg_max})
+        yr = f.index.year
+        f["imerg_72h"] = f.groupby(yr)["imerg_mean"].transform(lambda s: s.rolling(3, 1).sum())
+        ds = ds.merge(f, left_on="date", right_index=True, how="left")
+        print(f"IMERG の雨を追加（{ds.imerg_mean.notna().sum():,} 日）")
     ds.to_csv(out / "dataset.csv", index=False)
     x = np.concatenate(seqs)
     np.savez_compressed(out / "sequences.npz", x=x, y=ds["label"].values,

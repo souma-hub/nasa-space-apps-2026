@@ -14,6 +14,7 @@ import argparse
 import io
 import sys
 import tempfile
+import threading
 import time
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
@@ -32,6 +33,7 @@ LATE = "C2723754859-GES_DISC"
 # 0.1° 格子の添字: lon = -179.95 + 0.1 i, lat = -89.95 + 0.1 j
 LON = (3199, 3204)  # 139.95〜140.45E
 LAT = (1257, 1260)  # 35.75〜36.05N
+READ_LOCK = threading.Lock()  # netCDF/HDF5 の読み込みは同時に行うと固まるので 1 つずつ
 CE = (f"dap4.ce=/precipitation[0:1:0][{LON[0]}:1:{LON[1]}][{LAT[0]}:1:{LAT[1]}]"
       .replace("[", "%5B").replace("]", "%5D"))
 
@@ -58,7 +60,7 @@ def fetch_one(c, day, url, product):
         try:
             r = c.get(f"{url}.dap.nc4?{CE}")
             r.raise_for_status()
-            with tempfile.NamedTemporaryFile(suffix=".nc4") as f:
+            with READ_LOCK, tempfile.NamedTemporaryFile(suffix=".nc4") as f:
                 f.write(r.content)
                 f.flush()
                 d = xr.open_dataset(f.name)
