@@ -2,7 +2,7 @@
 # requires-python = ">=3.12"
 # dependencies = ["httpx", "python-dotenv", "numpy"]
 # ///
-"""発表用デモ画面 docs/demo/index.html を作る（1 ファイル完結、オフラインで file:// で開ける）。
+"""発表用デモ画面 deliverable/demo/index.html を作る（1 ファイル完結、オフラインで file:// で開ける）。
 
 係数（results/unified_model.json）・過去 23 台風（results/unified_kanto_loo.csv）を
 HTML に JSON として埋め込む。係数を学習し直したら、これを実行し直す。検証は check_demo.py。
@@ -20,7 +20,7 @@ from lodging_unified import FORECAST_FACTOR, VARIETY_JA, VARIETY_RAIN_FACTOR  # 
 
 MODEL = ROOT / "results/unified_model.json"
 TYPHOONS = ROOT / "results/unified_kanto_loo.csv"
-OUT = ROOT / "docs/demo/index.html"
+OUT = ROOT / "deliverable/demo/index.html"
 
 
 def build_data():

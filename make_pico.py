@@ -2,11 +2,12 @@
 # requires-python = ">=3.12"
 # dependencies = ["httpx", "python-dotenv", "numpy"]
 # ///
-"""統一モデルの係数（results/unified_model.json）を埋め込んだ、Raspberry Pi Pico 用の MicroPython プログラム pico/main.py を作る。
+"""統一モデルの係数（results/unified_model.json）を埋め込んだ、Raspberry Pi Pico 用の MicroPython プログラム deliverable/pico/main.py を作る。
 
 Pico では numpy もファイルも使わず、math だけで判断する。係数を学習し直したら、これを実行し直す。
 """
 import json
+import shutil
 import sys
 from pathlib import Path
 
@@ -223,11 +224,16 @@ def main():
     common = dict(params=repr(keep), ff=repr(FORECAST_FACTOR), vrf=repr(VARIETY_RAIN_FACTOR),
                   decide=DECIDE_SRC)
     for out, src in (
-        (Path("pico/main.py"), TEMPLATE.format(scen=repr(scen), **common)),
-        (Path("pico/demo_main.py"), DEMO_TEMPLATE.format(**common)),
+        (Path("deliverable/pico/main.py"), TEMPLATE.format(scen=repr(scen), **common)),
+        (Path("deliverable/pico/demo_main.py"), DEMO_TEMPLATE.format(**common)),
     ):
         out.write_text(src, encoding="utf-8")
         print(f"保存: {out}（{len(src.encode())} バイト）")
+    # 配布用に係数 JSON も deliverable/model/ へ複製する（deliverable/model/decide.py が読む）
+    model_out = Path("deliverable/model/unified_model.json")
+    model_out.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copyfile("results/unified_model.json", model_out)
+    print(f"複製: {model_out}")
 
 
 if __name__ == "__main__":

@@ -1,7 +1,7 @@
 # Raspberry Pi Pico H で判断を動かす（低スペック動作の検証）
 
 統一モデルの判断を、数百円のマイコン（Raspberry Pi Pico H、RAM 264 KB、クロック 133 MHz）の上で動かす。
-プログラムは `pico/main.py`（約 6 KB、`make_pico.py` が `results/unified_model.json` から自動で作る）。PC 版（`demo_lodging.py`）と同じ判断・確率になることを確認済み。
+プログラムは `deliverable/pico/main.py`（約 6 KB、`make_pico.py` が `results/unified_model.json` から自動で作る）。PC 版（`demo_lodging.py`）と同じ判断・確率になることを確認済み。
 
 ## 用意するもの
 - Raspberry Pi Pico H
@@ -15,7 +15,7 @@
    - Thonny を開き、右下のインタプリタ表示（または「ツール」→「オプション」→「インタプリタ」）で「MicroPython (Raspberry Pi Pico)」を選び、「MicroPython をインストール」で書き込む
      - 手で書く場合: https://micropython.org/download/RPI_PICO/ の .uf2 を RPI-RP2 ドライブにドラッグする（Pico 2 なら RPI_PICO2）
 2. **プログラムを入れる**
-   - Thonny で `pico/main.py` を開く
+   - Thonny で `deliverable/pico/main.py` を開く
    - 「ファイル」→「名前を付けて保存」→「Raspberry Pi Pico」→ 名前を `main.py` にして保存
 3. **実行する**
    - Thonny の緑の実行ボタン（F5）。下のシェルに結果が出る
@@ -44,7 +44,7 @@
 
 ## 実機での確認（2026-11-14）
 - 機材: Raspberry Pi Pico H（RP2040）、MicroPython v1.29.0（`RPI_PICO-20260824-v1.29.0.uf2`）
-- 書き込みと実行は Thonny の代わりに `mpremote` でもできる（インストール不要: `uvx mpremote connect COM3 run pico/main.py`、保存は `uvx mpremote connect COM3 cp pico/main.py :main.py`。COM 番号は PC ごとに違う）
+- 書き込みと実行は Thonny の代わりに `mpremote` でもできる（インストール不要: `uvx mpremote connect COM3 run deliverable/pico/main.py`、保存は `uvx mpremote connect COM3 cp deliverable/pico/main.py :main.py`。COM 番号は PC ごとに違う）
 - 結果: 10 シナリオすべてで、判断と確率（% 表示）が PC 版 `demo_lodging.py` と一致
 - 計算時間: 1 回 0.6〜1.2 ms。空きメモリ 221,808 バイト（RAM 264 KB のうち）
 - `main.py` として Pico に保存済み。USB 電源をつなぐだけで LED のデモが動く
@@ -53,22 +53,22 @@
 - 房総半島台風（2019 年 15 号）の確率が茨城・千葉の閾値（被害ありの最小確率）と同値で、単精度の Pico では `p >= thr` が不定だった。保存する閾値を 0.999 倍にした（全国 0.0894、茨城・千葉 0.1674）。PC・JS・Pico は同じ保存値を使う
 - 実機（COM3、MicroPython）で過去 23 台風を流し、PC 版と判断 23/23 一致。2019 年 15 号は両方「刈る」（Pico の確率 0.16756908、閾値 0.16740145）
 
-## 発表当日の手順（単体デモ版 `pico/demo_main.py`）
-開発環境のないノート PC でも動かせる。Pico には `pico/demo_main.py` を `main.py` として保存済み（`make_pico.py` が `results/unified_model.json` から自動で作る。以前の `main.py` は `pico/backup_main.py` に退避）。
+## 発表当日の手順（単体デモ版 `deliverable/pico/demo_main.py`）
+開発環境のないノート PC でも動かせる。Pico には `deliverable/pico/demo_main.py` を `main.py` として保存済み（`make_pico.py` が `results/unified_model.json` から自動で作る。以前の `main.py` は `deliverable/pico/backup_main.py` に退避）。
 
 1. **ノート PC に USB で挿すだけ**。BOOTSEL ボタンを**押しながら挿さない**（書き込みモードになり、プログラムが動かない。挿し直せば戻る）
 2. 起動すると LED が 1 秒点灯して消える（起動の合図）
 3. **BOOTSEL ボタンを押すたび**に、次のシナリオを交互に判断する。押すと LED が短く 3 回点滅（計算した合図）してから結果が出る
    - 1 回目: 「強い台風が直撃、稲は実っている」（茨城）→ **点灯したまま＝刈る**
    - 2 回目: 「台風が遠くを通る」（千葉）→ **消灯＝待ってよい**
-4. **画面に出す場合**: ノート PC の Edge（または Chrome）で `docs/demo/serial.html` を開く（ファイルをダブルクリックでよい）→「Pico に接続」→ 一覧から Pico（USB シリアルデバイス）を選ぶ。ドライバのインストールは不要（Windows 10 以降）。入力を変えて「Pico で判断」を押すと、Pico 上で計算した判断・確率・閾値・計算時間（マイクロ秒）が大きく出る。基板のボタンを押したときの判断も、同じ画面の別の欄に出る
+4. **画面に出す場合**: ノート PC の Edge（または Chrome）で `deliverable/demo/serial.html` を開く（ファイルをダブルクリックでよい）→「Pico に接続」→ 一覧から Pico（USB シリアルデバイス）を選ぶ。ドライバのインストールは不要（Windows 10 以降）。入力を変えて「Pico で判断」を押すと、Pico 上で計算した判断・確率・閾値・計算時間（マイクロ秒）が大きく出る。基板のボタンを押したときの判断も、同じ画面の別の欄に出る
    - 同時に他のソフト（Thonny、`mpremote`）が COM ポートを使っていると接続できない。先に閉じる
    - `mpremote` などで REPL に入ると `main.py` が止まる。Pico の USB を挿し直せば再開する
 5. **うまくいかないときの予備**: LED の動画 `docs/promo/assets/pico_led.mp4`
 6. モバイルバッテリーにつないでも動く（LED のデモだけ。画面表示には PC が要る）
 
-### 画面の使い分け（`docs/demo/pico.html`）
-- 画面が使えるとき: Edge / Chrome で `docs/demo/pico.html` を開き、「Pico に接続」を 1 回押す。上部のタブで 2 つの画面を切り替える（Pico は `demo_main.py` のまま）
+### 画面の使い分け（`deliverable/demo/pico.html`）
+- 画面が使えるとき: Edge / Chrome で `deliverable/demo/pico.html` を開き、「Pico に接続」を 1 回押す。上部のタブで 2 つの画面を切り替える（Pico は `demo_main.py` のまま）
   - 「入力を送って判断」: 入力欄から命令を送り、Pico の判断（刈る／待ってよい、確率、閾値）を出す。シリアルの応答だけ表示
   - 「Pico 単体の判断」: 基板の BOOTSEL ボタンを押したときの結果を受けて出すだけ。ボタン由来の応答だけ表示
 - 画面が使えないとき: ボタンと LED だけで実演する
@@ -80,6 +80,6 @@
 - ボタンの処理（`on_button`）もシリアルの処理（`on_line`）も、同じ `judge()` から同じ `decide()` を呼ぶ
 
 ### 実機での確認（2026-11-15）
-- 書き込みは `uvx mpremote connect COM3 cp pico/demo_main.py :main.py`
+- 書き込みは `uvx mpremote connect COM3 cp deliverable/pico/demo_main.py :main.py`
 - シリアル往復で、23 台風（`results/unified_kanto_loo.csv`、茨城・予報 0）の判断が PC 版 `lodging_unified.decide` と 23/23 一致。計算は約 0.8〜0.9 ms
 - ボタンは物理的に押せないため未確認（ボタンのロジックはシリアルと同じ `decide` を使うことをコードで担保）。`serial.html` も実ブラウザでは未確認（JS の構文チェックのみ）

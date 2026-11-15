@@ -55,7 +55,7 @@ Next: comparing planting choices, for any region and crop.
 ## 素材
 - `assets/field.jpg`: 田んぼの写真（オーナー撮影、EXIF 除去済み）
 - `assets/frog.jpg`: 稲とカエルの写真（同上）
-- `assets/demo.png`: デモ画面（docs/demo/index.html、1366×768）。必要なら headless ブラウザで撮り直してよい
+- `assets/demo.png`: デモ画面（deliverable/demo/index.html、1366×768）。必要なら headless ブラウザで撮り直してよい
 - `assets/pico_led.mp4`: Pico H の LED 実写（オーナー撮影の切り抜き 8.3 秒、30fps、Pico 周辺を 2 倍に拡大、音声と位置情報などのメタデータは除去済み）。2 秒ごとに 点灯→点灯→消灯→… と変わる。5 カット目で点灯→消灯が 1 回映る 4 秒を使う
 
 ## 確認

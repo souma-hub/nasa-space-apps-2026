@@ -2,7 +2,7 @@
 # requires-python = ">=3.12"
 # dependencies = ["httpx", "python-dotenv", "numpy"]
 # ///
-"""docs/demo/index.html の JS 判定関数が、Python の decide()（lodging_unified.py）と一致するかを node で確かめる。
+"""deliverable/demo/index.html の JS 判定関数が、Python の decide()（lodging_unified.py）と一致するかを node で確かめる。
 
 シナリオ 10 個と、過去 23 台風の再現（茨城・コシヒカリ、予報 0）で、確率が小数 6 桁・判断・理由の文言まで一致するかを見る。
 """
@@ -20,7 +20,7 @@ import nasa_common  # noqa: E402,F401
 from demo_lodging import SCENARIOS  # noqa: E402
 from lodging_unified import decide  # noqa: E402
 
-HTML = ROOT / "docs/demo/index.html"
+HTML = ROOT / "deliverable/demo/index.html"
 HARNESS = r'''
 import fs from "node:fs";
 const [html, casesPath] = process.argv.slice(2);

@@ -1,62 +1,95 @@
-# nasa-api — NASA ハッカソンに向けた API 練習
+# Harvest Now or Wait? — NASA data for typhoon harvest decisions
 
-2026-10-28 に Playground/nasa-api として作成し、2026-11-09 にこのフォルダへ移した。NASA Space Apps Challenge 2026（2026-11-14〜15）に向けた練習と本番用のリポジトリ。外出先から作業する方法は [REMOTE.md](REMOTE.md) を参照。
+Team Windfall Rice, NASA Space Apps Challenge 2026 (Tokyo). Challenge: "Field Shift: Adapting Farms with NASA Data".
 
-## 目的
-ハッカソン本番の前に、NASA の公開 API の使い方（認証・レート制限・データの形）に慣れておく。
+## Summary
 
-## 練習の候補（使う前に、今も提供されているかを確認すること。状況は 2026-11-09 時点）
-| 名前 | 中身 | 認証 | 練習としての価値 | 状況 |
-|---|---|---|---|---|
-| APOD | 毎日の天文写真と解説 | 新: 不要 / 旧: API キー | 最初の1本。GET と JSON の基本 | 旧 API（api.nasa.gov/planetary/apod）は HTTP 500。新エンドポイント `science.nasa.gov/wp-json/wp/v2/apod-basic`（2026-11-09 に動作を確認した）に切替済み。2026-12-01 に旧側（nasa/apod-api）はアーカイブ予定 |
-| NeoWs（api.nasa.gov） | 地球に近づく小惑星 | API キー | 日付で範囲を指定する、ページ送り、集計 | 稼働確認 |
-| DONKI（api.nasa.gov） | 太陽フレアなどの宇宙天気 | API キー | イベントのデータを時系列で扱う | 503 で未確認。CCMC 側 `https://ccmc.gsfc.nasa.gov/DONKI-API/get/` に移った可能性（未確認） |
-| EONET v3 | 山火事・火山などの自然現象（位置付き） | 不要 | 地図に表示する練習（GeoJSON） | 稼働確認 |
-| NASA Image and Video Library（images-api.nasa.gov） | 画像・動画の検索 | 不要 | 検索とメディアの扱い | 稼働確認 |
-| GIBS | 衛星画像のタイル | 不要 | 地図アプリに衛星画像を重ねる | Suomi NPP が 2026-11-02 に新規観測を停止し、NOAA-20/21 へ移行 |
-| Earthdata（CMR など） | 地球観測データの本体 | Earthdata Login が必要 | ハッカソンの課題で使われがち。大きいデータの扱い | 未確認 |
-| Mars Rover Photos | 火星探査車の写真 | API キー | （表から外している） | 404。旧実装は 2025-10 にアーカイブ |
+When a typhoon is forecast, many rice farmers in Japan harvest early, sometimes before the grain is fully ripe. They have no clear rule for when it is safe to wait. We built a small model that uses NASA GPM IMERG rainfall, NASA POWER wind and temperature, and GEOS-FP forecasts. It gives one simple signal: "harvest now" or "safe to wait". We tested it on 23 past typhoons in Ibaraki and Chiba, leaving one typhoon out at a time. It said "safe to wait" in 10 of the 16 typhoons that caused no major damage, and it missed 1 of the 7 that did. It runs on a laptop or on a Raspberry Pi Pico microcontroller. It is decision support, not a replacement for farmer judgment. The method is reusable: any region or crop with NASA data and a record of past damage can build its own rule the same way.
 
-- API キーは https://api.nasa.gov で無料で発行できる。`DEMO_KEY` はレート制限が厳しいので、練習を始めたら自分のキーを取る
-- レート制限: `DEMO_KEY` は 30回/時・50回/日（IP 単位）、個人キーは 1,000回/時
-- キーはコードに直接書かず、環境変数か `.env` に置いて `.gitignore` に入れる（公開リポジトリに漏らさない）
+## Start here
 
-## 作成済みスクリプト
-`uv run` で実行する（依存は各ファイル先頭の PEP 723 ヘッダで解決される）。
+Open the [`deliverable/`](deliverable/) folder. See [`deliverable/README.md`](deliverable/README.md) for how to run everything.
 
-注意: Windows の文字化け対策として、出力は nasa_common.py で UTF-8 に固定している。2026-11-09 に apod.py（新エンドポイント）と neows.py の動作を確認した。
+- `deliverable/model/`: the coefficients (`unified_model.json`) and a standalone `decide.py`.
+- `deliverable/pico/`: MicroPython programs for a Raspberry Pi Pico H (`main.py`, `demo_main.py`).
+- `deliverable/demo/`:
+  - `index.html`: browser demo. It works offline.
+  - `pico.html`: Web Serial page that sends inputs (about 20 bytes) to the Pico.
+  - `serial.html`: serial page for the Pico.
+
+## Key results
+
+We checked the model against 23 typhoons that came within 300 km of southern Kanto in August and September, 2004 to 2021. The reference answer is the MAFF disaster statistics: 7 typhoons caused paddy damage of 100 ha or more in Ibaraki and Chiba, and 16 did not. We left out one typhoon at a time, including from the national training data.
+
+- Harvesting at every typhoon warning would mean 23 early harvests. 16 of them would be for typhoons with no major damage.
+- Our model said "safe to wait" in 10 of those 16.
+- It missed 1 of the 7 damaging typhoons: the 2019 Boso Peninsula typhoon. It was small and strong. The grid-based NASA wind was weak (6.9 m/s), so the model did not flag it. We report this miss openly.
+- Across Japan (1,815 prefecture-typhoon records, 86 typhoons), adding wind to rain raised the AUC from 0.82 to 0.88. This is also leave-one-typhoon-out.
+- Sensitivity: we changed rain by +/-25% and wind by +/-15%. At most one decision changed on a damaging typhoon. This check uses the model trained on all data, not leave-one-out.
+- Over-forecasts of rain or wind only push the answer toward "harvest now". The risky case is a forecast that is much too weak.
+- On the Pico, the 23 past typhoons gave the same decisions as on a PC (23 of 23). One decision takes about 0.6 to 1.2 ms.
+
+## NASA data used
+
+| Data | Role |
+|---|---|
+| [GPM IMERG](https://gpm.nasa.gov/data/imerg) Daily, Final Run V07 (GPM_3IMERGDF); Late Run (GPM_3IMERGDL) for the latest days. Found through [NASA Earthdata CMR](https://cmr.earthdata.nasa.gov) | Rain that has already fallen. |
+| [NASA POWER](https://power.larc.nasa.gov/api/temporal/daily/point) daily point API: T2M and WS10M_MAX | Temperature gives how ripe the crop is. Wind is an input to the national model. |
+| [GEOS-FP](https://opendap.nccs.nasa.gov/dods/GEOS-5/fp/0.25_deg/fcast) forecasts (NASA GMAO, 0.25 degree) | Forecast rain and 10 m wind for the next 48 hours. |
+
+## Repository map
+
+Research scripts are at the repo root. Run them with `uv run`.
+
+| Role | Files |
+|---|---|
+| Data fetching | `fetch_imerg.py`, `fetch_geos_forecast.py`, `fetch_amedas.py`, `fetch_maff_damage.py`, `fetch_disaster_damage.py`, `fetch_fude.py`; dataset builders `build_dataset.py`, `build_japan_dataset.py` |
+| Analysis | `analyze_japan.py`, `analyze_japan_wind.py`, `analyze_japan_location.py`, `analyze_disasters.py`, `analyze_early_harvest.py`, `analyze_planting.py`, `analyze_enso.py`, `analyze_episodes.py`, `analyze_threshold.py`, `analyze_typhoon_stats.py` |
+| Model training | `unified_model.py` (trains and validates, writes `results/unified_model.json`), `lodging_unified.py` (runtime, `decide()`), `lodging_model.py` (older Ibaraki/Chiba rule, kept for comparison) |
+| Generators | `make_pico.py` (Pico programs), `make_demo.py` (browser demo), `make_promo.py` (demo video) |
+| Checks | `check_demo.py` (browser logic vs. Python `decide()`), `check_robustness.py` (sensitivity), `review_lodging_model.py` |
+| Live prediction | `predict_lodging.py` (fetches GEOS-FP, IMERG, POWER and decides; `--replay DATE` replays a past typhoon) |
+| Failed attempts | `lodging_s1.py`, `lodging_parcel.py` (Sentinel-1 radar, no useful signal) |
+
+Other folders:
+
+- `results/`: reports, predictions and the trained model.
+- `docs/`: design notes and reports. Many are in Japanese. They are the team's working notes. The English submission text is in `docs/submission/`.
+
+The root also holds early API practice scripts (`apod.py`, `neows.py`, `nasa_common.py`) that are not part of the model.
+
+## How to reproduce
+
+You need Python and [uv](https://docs.astral.sh/uv/). Dependencies are declared at the top of each script.
 
 ```
-uv run apod.py                      # 今日の APOD（新エンドポイント、キー不要）
-uv run apod.py --date 2024-01-01    # 日付指定（新側では apod-basic/240101 になる）
-uv run apod.py --json               # 生 JSON（形状の確認用）
-uv run apod.py --legacy             # 旧 API（キー付き。現在は 500 の見込み）
-uv run neows.py                     # 今日から7日間の接近小惑星 上位10件
-uv run neows.py --start 2026-11-09 --days 3
+uv run unified_model.py   # train and validate, write results/unified_model.json
+uv run make_pico.py       # generate deliverable/pico/ and copy the model to deliverable/model/
+uv run make_demo.py       # generate deliverable/demo/index.html
 ```
 
-API キーの置き方（`apod.py --legacy` と `neows.py` が使う。未設定なら `DEMO_KEY` で警告つき実行）:
-1. このフォルダに `.env` を作り、`NASA_API_KEY=取得したキー` と1行書く
-2. `.gitignore` に `.env` を入れる
-3. 環境変数 `NASA_API_KEY` が設定済みならそちらが優先される
+Fetching new data needs a NASA Earthdata token for IMERG. For other scripts, see each script's docstring. Fetched data is stored in `data/`, which is not committed.
 
-## 練習の段階（案）
-1. APOD を1回呼んで、タイトルと画像の URL を表示する（API キーと JSON の基本）
-2. NeoWs で1週間分の小惑星を取り、一番近づくものを表にする（パラメータとページ送り）
-3. EONET の現象を地図に表示する（位置データと可視化）
-4. 2つ以上の API を組み合わせた小さなアプリ（ハッカソンの予行演習）
+## Limitations
 
-## 未確認のこと
-- DONKI の移行先（CCMC 側に移ったかは未確認）
-- 上の各 API が今も提供されているか（終了・移行したものがありうる。状況欄は 2026-11-09 時点）
-- NASA Space Apps Challenge 2026 は 2026-11-14〜15 とのこと（第三者情報、公式サイトは未確認）。日程・課題・チームの条件も要確認
+- The reference is at prefecture level (Ibaraki and Chiba), not individual fields. Field-level records do not exist yet.
+- The validation set has only 23 typhoons. One typhoon changes the picture.
+- NASA's grid wind (about 50 km) can miss gusts from small, strong typhoons, as in 2019.
+- The reference is total wind and flood damage to paddy rice, not lodging alone.
+- The model was trained on observed rain and wind. We confirmed that it runs on GEOS-FP forecast data. We could not validate its decisions against real archived forecasts.
+- The threshold was tuned on past data. "10 of 16" is a past result, not a promise.
+- Soil health, water use, and crop rotation are not handled. Our planting comparison covers varieties and planting dates within rice only, and is a rough estimate.
 
-## 発表用デモ画面
-統一モデルの「刈る／待ってよい」判断を、ブラウザで動かして見せる 1 ファイル完結の画面（外部通信なし、オフラインで動く）。
-- 作る: `uv run make_demo.py`（`results/unified_model.json`・`results/unified_kanto_loo.csv`を埋め込んで `docs/demo/index.html` を生成）
-- 開く: `docs/demo/index.html` をブラウザで開く（プロジェクター向け 16:9。入力を動かすと即時に再計算）
-- 検証: `uv run check_demo.py`（JS の判定が Python の `decide()` と一致するかを node で確認）
-- 入力の初期値は URL クエリで渡せる: `index.html?pref=茨城&variety=koshihikari&past=40&forecast=80&wind=18&gdd=900`（どれも省略可。不正値は既定値）。シナリオはこの URL を手元に持つ運用
-  - 強い台風が直撃、稲は実っている: `?pref=茨城&past=40&forecast=80&wind=18&gdd=900`
-  - 同じ台風、ただし稲がまだ実りきっていない: `?pref=茨城&past=40&forecast=80&wind=18&gdd=250`
-  - 九州に強い台風（全国の部分だけ）: `?pref=鹿児島&past=60&forecast=100&wind=20`
+## Use of SI
+
+We used Anthropic's Claude (through Claude Code) widely: to write code, process data, run analyses, and draft documents and slides. The idea came from the team, based on a farmer friend's experience of harvesting early before typhoons. The team set the direction, decided what to adopt or drop, and checked the results. The voice in our demo video is text-to-speech (AI-generated). We did not generate any images. The photographs were taken by the team.
+
+## Data credits and references
+
+- NASA GPM IMERG, NASA POWER and NASA GEOS-FP (see above).
+- Japan Meteorological Agency (JMA) RSMC Tokyo Best Track data: https://www.jma.go.jp/jma/jma-eng/jma-center/rsmc-hp-pub-eg/Besttracks/bst_all.zip
+- MAFF disaster damage statistics for paddy rice (the reference answer), via e-Stat: https://www.e-stat.go.jp/stat-search/files
+- JMA AMeDAS ground observations: https://www.data.jma.go.jp/stats/etrn/view/
+- ESA Sentinel-1 via Microsoft Planetary Computer (tried; did not detect lodging): https://planetarycomputer.microsoft.com/api/stac/v1
+- Harvest timing guidance: [Chiba Prefecture](https://www.pref.chiba.lg.jp/ninaite/gijyututaisaku/documents/240718harvest.pdf), [Ibaraki Prefecture](https://www.pref.ibaraki.jp/nourinsuisan/ounourin/keiei/fukyuuhp/documents/240820seiikujouhou05.pdf)
+- Tools: Python, uv, httpx, NumPy, pandas, SciPy, scikit-learn, xarray, netCDF4, MicroPython; ffmpeg and Windows SAPI text-to-speech (AI-generated voice) for the demo video.

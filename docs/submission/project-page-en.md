@@ -19,7 +19,7 @@ Challenge: **Field Shift**
 
 ## 2. High-Level Project Summary
 
-When a typhoon is forecast, many rice farmers in Japan harvest early, sometimes before the grain is fully ripe, because they have no clear rule for when it is safe to wait. We built a small model that uses NASA GPM IMERG rainfall, NASA POWER wind and temperature, and GEOS-FP forecasts to give a simple signal: "harvest now" or "safe to wait". Tested on 23 past typhoons in Ibaraki and Chiba, leaving one typhoon out at a time, it said "safe to wait" in 10 of the 16 typhoons that caused no major damage, and missed 1 of the 7 that did. It runs on a laptop or on a Raspberry Pi Pico microcontroller. We also made a rough comparison of planting choices, a first step toward Field Shift's goal of exploring crop options. It is decision support, not a replacement for farmer judgment.
+When a typhoon is forecast, many rice farmers in Japan harvest early, sometimes before the grain is fully ripe, because they have no clear rule for when it is safe to wait. We built a small model that uses NASA GPM IMERG rainfall, NASA POWER wind and temperature, and GEOS-FP forecasts to give a simple signal: "harvest now" or "safe to wait". Tested on 23 past typhoons in Ibaraki and Chiba, leaving one typhoon out at a time, it said "safe to wait" in 10 of the 16 typhoons that caused no major damage, and missed 1 of the 7 that did. It runs on a laptop or on a Raspberry Pi Pico microcontroller. We also made a rough comparison of planting choices, a first step toward Field Shift's goal of exploring crop options. It is decision support, not a replacement for farmer judgment. The method itself is reusable: any region or crop with NASA data and a record of past damage can build its own rule the same way.
 
 ---
 
@@ -70,7 +70,7 @@ Only the early variety reduced the overlap. Treat this as an estimate only: head
 
 ### Runs anywhere
 
-The decision needs a few numbers and a few coefficients. On a PC one decision takes a few microseconds. On a Raspberry Pi Pico H (RP2040, 264 KB RAM, a board that costs a few dollars) running MicroPython, one decision takes about 0.6 to 1.2 ms. On the Pico, the 23 past typhoons gave the same decisions as the PC (23 of 23), and the demo scenarios matched in both decision and displayed percentage. There is no cloud service and no vendor lock-in. The coefficients are plain numbers that anyone can copy. There is also a single-file browser demo that works offline.
+The decision needs a few numbers and a few coefficients. On a PC one decision takes a few microseconds. On a Raspberry Pi Pico H (RP2040, 264 KB RAM, a board that costs about US$5) running MicroPython, one decision takes about 0.6 to 1.2 ms. On the Pico, the 23 past typhoons gave the same decisions as the PC (23 of 23), and the demo scenarios matched in both decision and displayed percentage. There is no cloud service and no vendor lock-in. The coefficients are plain numbers that anyone can copy. There is also a single-file browser demo that works offline.
 
 ### Benefits
 
@@ -98,7 +98,7 @@ The method is the same wherever there are NASA data and a record of past damage:
 
 ### Tools
 
-Python with uv; httpx, NumPy, pandas, SciPy, scikit-learn, xarray, netCDF4 for data and analysis; MicroPython (Thonny and mpremote) on a Raspberry Pi Pico H; a single-file HTML demo and slides; [TBD: confirm video tools such as ffmpeg and the TTS engine actually used].
+Python with uv; httpx, NumPy, pandas, SciPy, scikit-learn, xarray, netCDF4 for data and analysis; MicroPython (Thonny and mpremote) on a Raspberry Pi Pico H; a single-file HTML demo and slides; ffmpeg and Windows SAPI text-to-speech (an English system voice, Microsoft Zira preferred; AI-generated) for the demo video.
 
 ---
 
@@ -144,7 +144,7 @@ We used Anthropic's Claude (through Claude Code) widely: to write code, process 
 |---|---|---|
 | §3 | YouTube の公開リンク（ログイン不要） | オーナー |
 | §3 | 公開リポジトリのリンク（現在リポジトリは非公開。公開が必須） | オーナー |
-| §4 Tools | 動画制作で実際に使ったツール（ffmpeg、TTS は Piper か espeak-ng か。`docs/promo/README.md` は案で、`make_promo.py` はリポジトリに未確認） | 本体 |
+| §4 Tools | 解決済み: `make_promo.py` を確認し、ffmpeg と Windows SAPI（Zira 優先の英語音声）と記載。Zira が入っていない環境では別の英語音声になるため、実際に使われた声名は動画生成時の `voice:` 出力で要確認 | 本体 |
 | §7 | NOAA CPC の ONI の URL（`analyze_enso.py` に URL の記述が見つからなかった） | 本体 |
 | §7 | 筆ポリゴンの公式ページ URL（`fetch_fude.py` は ArcGIS の REST を使っており、一般向けページが未確認） | 本体 |
 | §1 | プロジェクト名の最終決定 | オーナー |
