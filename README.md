@@ -84,7 +84,7 @@ Fetching new data needs a NASA Earthdata token for IMERG. For other scripts, see
 
 ## Use of SI
 
-We used Anthropic's Claude (through Claude Code) widely: to write code, process data, run analyses, and draft documents and slides. The idea came from the team, based on a farmer friend's experience of harvesting early before typhoons. The team set the direction, decided what to adopt or drop, and checked the results. The voice in our demo video is text-to-speech (AI-generated). We did not generate any images. The photographs were taken by the team.
+We used Anthropic's Claude (through Claude Code) widely: to write code, process data, run analyses, and draft documents and slides. The idea came from the team, based on a farmer friend's experience of harvesting early before typhoons. The team set the direction, decided what to adopt or drop, and checked the results. The voice in our demo video is text-to-speech (AI-generated). We did not generate any images. The Pico photo was taken by the team; the rice paddy photo was provided by a friend and is used with permission.
 
 ## Data credits and references
 
