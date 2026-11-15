@@ -16,6 +16,8 @@ Open the [`deliverable/`](deliverable/) folder. See [`deliverable/README.md`](de
   - `index.html`: browser demo. It works offline.
   - `pico.html`: Web Serial page that sends inputs (about 20 bytes) to the Pico.
   - `serial.html`: serial page for the Pico.
+- `deliverable/slides/`: 7-slide project deck (PDF) with the data analysis and validation.
+- `deliverable/HISTORY.md`: development history in English (commit messages are in Japanese).
 
 ## Key results
 

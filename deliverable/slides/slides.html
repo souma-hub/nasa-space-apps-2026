@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Harvest Now or Wait? - Team Windfall Rice - NASA Space Apps 2026</title>
+<style>
+@page { size: 1920px 1080px; margin: 0 }
+* { box-sizing: border-box; margin: 0; padding: 0 }
+html, body { background: #fff }
+body { font-family: "Noto Sans", "Segoe UI", Arial, "Yu Gothic", Meiryo, sans-serif; color: #222; font-size: 21px; line-height: 1.38; -webkit-print-color-adjust: exact; print-color-adjust: exact }
+.slide { width: 1920px; height: 1080px; position: relative; overflow: hidden; background: #fff; page-break-after: always; break-after: page }
+.slide:last-child { page-break-after: auto; break-after: auto }
+.head { position: absolute; left: 48px; right: 48px; top: 22px; height: 118px; border-bottom: 2px solid #1d2a44 }
+.head h1 { font-size: 44px; line-height: 1.15; color: #1d2a44; font-weight: 700; letter-spacing: .2px }
+.head .km { font-size: 26px; font-weight: 700; color: #222; margin-top: 8px; line-height: 1.25 }
+.head .km b { color: #b3261e }
+.cols { position: absolute; left: 48px; right: 48px; top: 154px; bottom: 74px; display: flex; gap: 20px }
+.col { display: flex; flex-direction: column; gap: 20px; min-width: 0 }
+.row { display: flex; gap: 20px; min-width: 0 }
+.box { background: #eef0f3; display: flex; flex-direction: column; min-height: 0; border: 1px solid #cfd4db }
+.box > h3 { background: #1d2a44; color: #fff; font-size: 19px; font-weight: 700; padding: 5px 14px; letter-spacing: .3px; flex: none }
+.box > .b { padding: 12px 16px; flex: 1; min-height: 0 }
+.f1 { flex: 1 } .f2 { flex: 2 } .f3 { flex: 3 }
+ul { padding-left: 24px } li { margin-bottom: 5px }
+.red { color: #b3261e; font-weight: 700 }
+.navy { color: #1d2a44 }
+.sm { font-size: 16px; color: #444; line-height: 1.35 }
+.fn { font-size: 15px; color: #444; line-height: 1.35 }
+table { border-collapse: collapse; width: 100% }
+th { background: #dde1e8; color: #1d2a44; font-size: 18px; text-align: left; padding: 6px 10px; border-bottom: 2px solid #1d2a44 }
+td { padding: 6px 10px; border-bottom: 1px solid #c4cad3; font-size: 20px; vertical-align: top }
+td.n, th.n { text-align: right; white-space: nowrap }
+tr.hi td { background: #f7e3e1 }
+.foot { position: absolute; left: 48px; right: 48px; bottom: 0; height: 66px; border-top: 1px solid #1d2a44; display: flex; justify-content: space-between; gap: 30px; padding-top: 5px }
+.foot .src { font-size: 15px; color: #444; line-height: 1.3; width: 1330px }
+.foot .pg { font-size: 15px; color: #1d2a44; text-align: right; line-height: 1.3; white-space: nowrap }
+.foot .pg b { font-size: 20px }
+code { font-family: Consolas, "Courier New", "Yu Gothic", monospace; background: #fff; border: 1px solid #c4cad3; padding: 1px 6px; font-size: 19px }
+.kpi { flex: 1; background: #fff; border: 2px solid #1d2a44; border-top: 8px solid #b3261e; padding: 8px 14px 10px; text-align: center }
+.kpi .v { font-size: 72px; font-weight: 800; color: #b3261e; line-height: 1.05 }
+.kpi .l { font-size: 20px; font-weight: 700; color: #1d2a44; line-height: 1.25 }
+.kpi .s { font-size: 16px; color: #444; line-height: 1.3; margin-top: 3px }
+.card { flex: 1; background: #fff; border: 1px solid #1d2a44; border-left: 8px solid #1d2a44; padding: 6px 12px; display: flex; flex-direction: column; justify-content: center }
+.card .t { font-size: 21px; font-weight: 700; color: #1d2a44 }
+.card .d { font-size: 17px; color: #333; line-height: 1.3 }
+.arrow { text-align: center; color: #b3261e; font-size: 16px; line-height: 12px; height: 12px; flex: none }
+.sq { display: inline-block; width: 30px; height: 30px; margin: 0 3px 4px 0; background: #8a94a3 }
+.sq.d { background: #b3261e }
+table.dt td { padding: 3px 10px; font-size: 19px } table.dt th { padding: 4px 10px }
+img { display: block }
+body.single .slide { display: none }
+body.single .slide.show { display: block }
+@media print { body.single .slide { display: block } }
+</style>
+</head>
+<body>
+
+<!-- ============ SLIDE 1 ============ -->
+<section class="slide" id="s1">
+  <div class="head" style="height:150px">
+    <h1 style="font-size:64px">Harvest Now or Wait?</h1>
+    <div class="km" style="font-weight:600;font-size:28px;color:#1d2a44">A NASA-data decision rule for rice harvest timing before typhoons</div>
+    <div style="font-size:20px;margin-top:4px"><b class="navy">Team Windfall Rice</b> &nbsp;|&nbsp; <span class="red">Tokyo local event: 1st place</span> &nbsp;|&nbsp; Challenge: <b>Field Shift: Adapting Farms with NASA Data</b></div>
+  </div>
+  <div class="cols" style="top:186px">
+    <div class="col" style="width:1130px">
+      <div class="box f1">
+        <h3>EXECUTIVE SUMMARY</h3>
+        <div class="b" style="font-size:26px;padding-top:16px">
+          <ul style="padding-left:28px">
+            <li style="margin-bottom:12px"><b>Problem.</b> At every typhoon forecast, many farmers harvest early, often before the grain is ripe, because there is no clear rule for when it is safe to wait.</li>
+            <li style="margin-bottom:12px"><b>What we built.</b> One logistic model using NASA GPM IMERG rain, NASA POWER wind and temperature, and GEOS-FP forecasts, checked against official MAFF damage records. Output: &ldquo;harvest now&rdquo; or &ldquo;safe to wait&rdquo;.</li>
+            <li style="margin-bottom:12px"><b>Result.</b> Leaving one typhoon out at a time, on 23 typhoons in Ibaraki &amp; Chiba: <span class="red">&ldquo;safe to wait&rdquo; in 10 of 16</span> no-damage typhoons; <span class="red">missed 1 of 7</span> damaging ones.</li>
+            <li style="margin-bottom:12px"><b>Runs anywhere.</b> One decision takes about 1 ms on a US$5 Raspberry Pi Pico H; no cloud needed.</li>
+            <li style="margin-bottom:12px"><b>Decision support, not a replacement</b> for farmer judgment. The method is reusable for any region or crop with NASA data and a record of past damage.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="row" style="height:210px">
+        <div class="kpi"><div class="v">10 / 16</div><div class="l">&ldquo;safe to wait&rdquo; correctly</div><div class="s">no-damage typhoons, leave-one-out</div></div>
+        <div class="kpi"><div class="v">1 / 7</div><div class="l">damaging typhoons missed</div><div class="s">the 2019 Boso Peninsula typhoon</div></div>
+        <div class="kpi"><div class="v">~1 ms</div><div class="l">one decision on a US$5 chip</div><div class="s">Raspberry Pi Pico H, offline</div></div>
+      </div>
+    </div>
+    <div class="col f1">
+      <div style="height:430px;overflow:hidden;border:1px solid #cfd4db;flex:none"><img src="img/field.jpg" style="width:100%;height:100%;object-fit:cover;object-position:50% 80%" alt="Rice paddy in Ibaraki"></div>
+      <div class="sm" style="margin-top:-12px">Photo: rice paddy, taken by the team.</div>
+      <div class="box f1">
+        <h3>LINKS</h3>
+        <div class="b" style="font-size:21px">
+          <div style="margin-bottom:10px"><b>Demo video (28 s):</b><br><span class="red">[DEMO_VIDEO_URL]</span></div>
+          <div><b>Code &amp; data:</b><br>https://github.com/souma-hub/nasa-space-apps-2026</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><div class="src">Sources: results/unified_kanto_loo.csv (23 typhoons, 2004-2021, Aug-Sep, within 300 km of southern Kanto; reference: MAFF disaster statistics, paddy damage &ge;100 ha in Ibaraki + Chiba); NASA GPM IMERG V07, NASA POWER, NASA GEOS-FP. Pico timing: see page 6.</div><div class="pg">Team Windfall Rice | NASA Space Apps Challenge 2026 | Field Shift<br><b>1 / 7</b></div></div>
+</section>
+
+<!-- ============ SLIDE 2 ============ -->
+<section class="slide" id="s2">
+  <div class="head"><h1>Problem and approach</h1><div class="km">Forecasts say rain and wind; they do not say whether it is <b>safe to wait</b>.</div></div>
+  <div class="cols" style="flex-direction:column">
+    <div class="row" style="height:598px">
+      <div class="col" style="width:650px">
+        <div class="box f1">
+          <h3>CURRENT PRACTICE</h3>
+          <div class="b">
+            <ul>
+              <li>A typhoon is forecast &rarr; farmers <b>harvest early to be safe</b>, even when the rice is not ready.</li>
+              <li>Best harvest window is about <span class="red">35-40 days after heading</span>.</li>
+              <li>Earlier harvest raises the share of <b>immature grain</b> and lowers the inspection grade (Chiba and Ibaraki prefecture guidance).</li>
+              <li>Farmers have no clear rule for when waiting is safe.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="box f1">
+          <h3>23 TYPHOONS, 2004-2021 (AUG-SEP)</h3>
+          <div class="b">
+            <div style="margin-bottom:6px"><span class="sq d"></span><span class="sq d"></span><span class="sq d"></span><span class="sq d"></span><span class="sq d"></span><span class="sq d"></span><span class="sq d"></span><span class="sq"></span><span class="sq"></span><span class="sq"></span><span class="sq"></span><span class="sq"></span><span class="sq"></span><span class="sq"></span><span class="sq"></span><span class="sq"></span><span class="sq"></span><span class="sq"></span><span class="sq"></span><span class="sq"></span><span class="sq"></span><span class="sq"></span><span class="sq"></span></div>
+            <div style="font-size:20px"><span class="red">7</span> caused paddy damage &ge;100 ha in Ibaraki + Chiba (MAFF); <b>16</b> did not.</div>
+            <div style="font-size:20px;margin-top:6px">Harvesting at every warning = <span class="red">16 unnecessary early harvests</span>.</div>
+            <div class="fn" style="margin-top:6px">Typhoons passing within 300 km of southern Kanto.</div>
+          </div>
+        </div>
+      </div>
+      <div class="col" style="width:500px">
+        <div class="box f1">
+          <h3>WHAT FORECASTS TELL</h3>
+          <div class="b"><ul>
+            <li>Expected rain over the next days</li>
+            <li>Expected wind speed</li>
+            <li>Typhoon track and timing</li>
+          </ul><div class="fn">Useful, but about the weather only.</div></div>
+        </div>
+        <div class="box f2">
+          <h3>WHAT THEY DO NOT TELL</h3>
+          <div class="b"><ul>
+            <li>Whether <b>this crop at this ripeness</b> will be damaged</li>
+            <li>How much rain that has <b>already fallen</b> matters</li>
+            <li>Whether it is <span class="red">safe to wait</span> a few more days</li>
+            <li>How a forecast error would change the decision</li>
+          </ul><div class="fn">Our model adds these, using past typhoons and official damage records.</div></div>
+        </div>
+      </div>
+      <div class="col f1">
+        <div class="box f1">
+          <h3>APPROACH: FOUR STEPS</h3>
+          <div class="b" style="display:flex;flex-direction:column;gap:2px;padding:10px 14px">
+            <div class="card"><div class="t">1. Survey</div><div class="d">Official damage records (MAFF) as the reference answer</div></div><div class="arrow">&#9660;</div>
+            <div class="card"><div class="t">2. Analyse</div><div class="d">NASA past data: rain, wind, temperature</div></div><div class="arrow">&#9660;</div>
+            <div class="card"><div class="t">3. Predict</div><div class="d">&ldquo;Harvest now&rdquo; or &ldquo;safe to wait&rdquo;</div></div><div class="arrow">&#9660;</div>
+            <div class="card"><div class="t">4. Operation check</div><div class="d">Runs on NASA GEOS-FP forecast data</div></div>
+          </div>
+        </div>
+        <div class="box" style="flex:none">
+          <h3>DESIGN PRINCIPLES</h3>
+          <div class="b" style="font-size:19px;padding:8px 14px"><b>Decision support:</b> shows the rule and the reason. <b>Light:</b> no expensive compute. <b>No lock-in:</b> inputs are replaceable.</div>
+        </div>
+      </div>
+    </div>
+    <div class="box f1">
+      <h3>DATA USED</h3>
+      <div class="b" style="padding:4px 12px">        <table class="dt">
+          <tr><th style="width:380px">Source</th><th style="width:900px">Variable and role</th><th>Detail</th></tr>
+          <tr><td><b>NASA GPM IMERG</b> daily, V07</td><td>Rain already fallen</td><td>0.1&deg; grid; main training input</td></tr>
+          <tr><td><b>NASA POWER</b></td><td>T2M temperature &rarr; accumulated temperature after heading; WS10M_MAX wind</td><td>Daily point data</td></tr>
+          <tr><td><b>NASA GEOS-FP</b></td><td>Forecast rain and wind, next 48 h</td><td>0.25&deg; grid</td></tr>
+          <tr><td>Reference: MAFF disaster statistics</td><td>Paddy damage per typhoon (the answer key)</td><td>Comparison: JMA AMeDAS</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><div class="src">Sources: docs/submission/project-page-en.md (Sections 4, 6, 7); Chiba Pref. harvest guidance (pref.chiba.lg.jp, 240718harvest.pdf) and Ibaraki Pref. (pref.ibaraki.jp, 240820seiikujouhou05.pdf); MAFF disaster statistics via e-Stat; JMA RSMC Tokyo Best Track.</div><div class="pg">Team Windfall Rice | NASA Space Apps Challenge 2026 | Field Shift<br><b>2 / 7</b></div></div>
+</section>
+
+<!-- ============ SLIDE 3 ============ -->
+<section class="slide" id="s3">
+  <div class="head"><h1>Data analysis: Ibaraki and Chiba, 23 typhoons</h1><div class="km">Damaging typhoons brought about <b>twice the rain</b>; NASA grid wind missed gusts in Kanto; unripe rice did not lodge.</div></div>
+  <div class="cols">
+    <div class="col" style="width:640px">
+      <div class="box f1">
+        <h3>A. RAIN PER TYPHOON: DAMAGE VS NO DAMAGE</h3>
+        <div class="b" style="padding:8px 12px">
+          <img src="img/chart_rain.png" style="width:100%" alt="Rain strip plot">
+          <div style="font-size:22px;margin-top:6px">Medians: <span class="red">114 mm</span> (damage) vs <b>51 mm</b> (none). One-sided Mann-Whitney <span class="red">p = 0.001</span> (IMERG) and <span class="red">p = 0.001</span> (POWER rain).</div>
+          <div class="fn" style="margin-top:4px">Rain window: 2 days before to 1 day after closest approach. Damage = paddy damage &ge;100 ha (MAFF).</div>
+        </div>
+      </div>
+    </div>
+    <div class="col" style="width:600px">
+      <div class="box">
+        <h3>B. DAMAGED VS NOT: ONE-SIDED MANN-WHITNEY</h3>
+        <div class="b" style="padding:6px 10px">
+          <table>
+            <tr><th>Variable</th><th class="n">Median: damage / none</th><th class="n">p-value</th></tr>
+            <tr><td>IMERG rain</td><td class="n">114 / 51 mm</td><td class="n red">0.001</td></tr>
+            <tr><td>POWER rain</td><td class="n">121 / 54 mm</td><td class="n red">0.001</td></tr>
+            <tr><td>POWER wind</td><td class="n">11.7 / 11.2 m/s</td><td class="n">0.15 <span class="sm">(no diff.)</span></td></tr>
+            <tr><td>AMeDAS max gust</td><td class="n">27.2 / 18.5 m/s</td><td class="n red">0.001</td></tr>
+          </table>
+        </div>
+      </div>
+      <div class="box">
+        <h3>WHY NASA WIND MISSED KANTO</h3>
+        <div class="b">
+          <div style="margin-bottom:8px;font-size:22px">2019 Typhoon No.15 (Boso Peninsula):</div>
+          <div style="display:flex;gap:14px;margin-bottom:10px">
+            <div class="kpi" style="border-top-width:6px"><div class="v" style="font-size:44px;color:#1d2a44">6.9 m/s</div><div class="s">NASA POWER grid wind</div></div>
+            <div class="kpi" style="border-top-width:6px"><div class="v" style="font-size:44px">45.8 m/s</div><div class="s">AMeDAS gust</div></div>
+          </div>
+          <div style="font-size:23px">A reanalysis grid cannot represent the gusts of a compact typhoon. Across Japan (86 typhoons) NASA wind <b>did</b> help, so it is kept in the national model.</div>
+        </div>
+      </div>
+      <div class="box f1">
+        <h3>WHAT THIS MEANS</h3>
+        <div class="b" style="font-size:22px"><ul>
+          <li>In Kanto, <b>rain</b> separates damaging typhoons (p = 0.001), <b>NASA grid wind does not</b> (p = 0.15).</li>
+          <li>Across Japan, rain + wind gives AUC <b>0.88</b> vs 0.82 for rain only.</li>
+        </ul></div>
+      </div>
+    </div>
+    <div class="col f1">
+      <div class="box f1">
+        <h3>C. RIPENESS RULE (IBARAKI / CHIBA PART)</h3>
+        <div class="b">
+          <div style="background:#fff;border:2px solid #1d2a44;padding:12px 16px;margin-bottom:16px;font-size:24px">
+            <b>Harvest</b> if IMERG rain <span class="red">&ge; 30 mm</span> <b>AND</b> Koshihikari accumulated temperature after heading <span class="red">&ge; 400 &deg;C</span>.<br>Otherwise: <b>safe to wait</b>.
+          </div>
+          <table>
+            <tr><th>Check</th><th class="n">Missed</th><th class="n">Safe to wait</th></tr>
+            <tr><td>In-sample</td><td class="n">0 / 7</td><td class="n">10 / 16</td></tr>
+            <tr><td>Leave-one-out</td><td class="n red">1 / 7</td><td class="n red">8 / 16</td></tr>
+          </table>
+          <div style="font-size:18px;color:#444;margin:4px 0 16px">Leave-one-out, Fisher exact p = 0.12.</div>
+          <div style="font-size:23px"><b>Soon after heading (&lt;400 &deg;C)</b>, even &ge;50 mm of rain caused <span class="red">no damage in 3 of 3 cases</span>: this matches farmers&rsquo; experience that unripe rice rarely lodges.</div>
+          <table style="margin-top:10px">
+            <tr><th>No-damage typhoon</th><th class="n">IMERG rain</th><th class="n">Accum. temp.</th></tr>
+            <tr><td>2006 No.7</td><td class="n">79 mm</td><td class="n">238 &deg;C</td></tr>
+            <tr><td>2009 No.9</td><td class="n">87 mm</td><td class="n">364 &deg;C</td></tr>
+            <tr><td>2021 No.10</td><td class="n">122 mm</td><td class="n">332 &deg;C</td></tr>
+          </table>
+          <div class="fn" style="margin-top:16px;font-size:16px">Thresholds were fitted to past data; exploratory, no multiple-comparison correction.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><div class="src">Sources: results/unified_kanto_loo.csv (IMERG GPM_3IMERGDF V07, NASA POWER daily, JMA AMeDAS, MAFF damage via e-Stat); medians and p-values recomputed from this file (scipy mannwhitneyu, one-sided); 3-of-3 count and Fisher p from the same file. National model: 86 typhoons (docs/submission/project-page-en.md).</div><div class="pg">Team Windfall Rice | NASA Space Apps Challenge 2026 | Field Shift<br><b>3 / 7</b></div></div>
+</section>
+
+<!-- ============ SLIDE 4 ============ -->
+<section class="slide" id="s4">
+  <div class="head"><h1>Unified model and validation</h1><div class="km">One national model, validated by <b>leaving one typhoon out at a time</b>.</div></div>
+  <div class="cols" style="flex-direction:column">
+    <div class="row" style="height:520px">
+      <div class="box" style="width:540px">
+        <h3>THE MODEL</h3>
+        <div class="b" style="font-size:23px">
+          <ul>
+            <li><b>Logistic regression</b>, a few coefficients.</li>
+            <li><b>National part:</b> rain + wind + per-prefecture correction.</li>
+            <li><b>Local term</b> for Ibaraki / Chiba ripeness: vulnerable stage roughly <span class="red">400-1,500 &deg;C</span> after heading.</li>
+            <li>Trained on <b>1,815</b> prefecture-typhoon records from <b>86</b> typhoons.</li>
+            <li><b>Threshold set low on purpose</b> (about 17% for Ibaraki / Chiba): a missed damaging typhoon costs more than a cautious call.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="box" style="width:640px">
+        <h3>LEAVE-ONE-TYPHOON-OUT, 23 TYPHOONS</h3>
+        <div class="b" style="padding:8px 12px">
+          <table>
+            <tr><th>Actual</th><th class="n">Harvest now</th><th class="n">Safe to wait</th></tr>
+            <tr><td>Damage (7)</td><td class="n">6</td><td class="n red">1 missed</td></tr>
+            <tr><td>No damage (16)</td><td class="n">6</td><td class="n red">10</td></tr>
+          </table>
+          <div style="font-size:19px;margin:4px 0 6px">Fisher exact <span class="red">p = 0.045</span></div>
+          <img src="img/chart_loo.png" style="width:100%" alt="LOO probabilities">
+        </div>
+      </div>
+      <div class="box f1">
+        <h3>IS IT REAL?</h3>
+        <div class="b" style="font-size:24px">
+          <ul>
+            <li><b>Permutation test</b> (10,000 label shuffles): <span class="red">p = 0.0234</span> for the count criterion, <span class="red">p = 0.0036</span> for AUC.</li>
+            <li><b>Negative control</b> (weather from a different typhoon, 1,000 runs): agreement falls from 17/23 to <span class="red">11.6/23</span>; misses rise from 0 to <span class="red">2.7</span> on average.</li>
+            <li><b>Across Japan</b>, leave-one-typhoon-out AUC rises from <b>0.82</b> (rain only) to <span class="red">0.88</span> (rain + wind).</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="box f1">
+      <h3>FORECAST ERROR SENSITIVITY: DO DECISIONS CHANGE IF THE FORECAST IS WRONG?</h3>
+      <div class="b" style="display:flex;gap:22px;padding:8px 14px">
+        <div style="width:475px;flex:none;text-align:center">
+          <img src="img/chart_sens.png" style="height:262px;margin:0 auto" alt="Sensitivity heatmap">
+        </div>
+        <div style="flex:1;font-size:22px">
+          <ul>
+            <li>Rain &times;0.75-1.25 <b>or</b> wind &times;0.85-1.15 (one at a time) turns at most <span class="red">1 of 7</span> damaging-typhoon decisions to &ldquo;wait&rdquo;: the 2019 Boso typhoon.</li>
+            <li>Over-forecasts only push toward &ldquo;harvest now&rdquo; (the safe side).</li>
+            <li>Strong under-forecasts (rain &times;0.5 or wind &times;0.7) would miss <span class="red">4</span>.</li>
+            <li>Both lowered together (rain &times;0.75 and wind &times;0.85) would also miss 4.</li>
+          </ul>
+          <div class="fn" style="margin-top:6px;font-size:16px">Heatmap: number of damaging typhoons that flip from &ldquo;harvest now&rdquo; to &ldquo;safe to wait&rdquo; (risky direction) for each rain &times; wind multiplier; box = original. This is the in-sample model, not leave-one-out.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><div class="src">Sources: results/unified_kanto_loo.csv (leave-one-typhoon-out p_unified, threshold 0.1674 from deliverable/model/unified_model.json); results/robustness_report.txt (permutation test, negative control, V1 sensitivity grid; seed 20261115); AUC 0.82 / 0.88 and 1,815 records / 86 typhoons from docs/submission/project-page-en.md.</div><div class="pg">Team Windfall Rice | NASA Space Apps Challenge 2026 | Field Shift<br><b>4 / 7</b></div></div>
+</section>
+
+<!-- ============ SLIDE 5 ============ -->
+<section class="slide" id="s5">
+  <div class="head"><h1>Field Shift: planting options (rough estimate)</h1><div class="km">The same vulnerable-stage idea lets farmers <b>compare planting choices</b>.</div></div>
+  <div class="cols">
+    <div class="col" style="width:940px">
+      <div class="box">
+        <h3>TYPHOONS OVERLAPPING THE VULNERABLE STAGE, 1981-2025</h3>
+        <div class="b" style="padding:8px 12px">
+          <table>
+            <tr><th>Strategy (all rice)</th><th class="n">Overlapping typhoons</th></tr>
+            <tr><td>Existing practice (Koshihikari)</td><td class="n">54 / 113</td></tr>
+            <tr><td>Plant 3 weeks later (Koshihikari)</td><td class="n">56 / 113</td></tr>
+            <tr class="hi"><td><b>Early variety (Akitakomachi)</b></td><td class="n red">38 / 113</td></tr>
+            <tr><td>Late variety (Nijinokirameki)</td><td class="n">57 / 113</td></tr>
+          </table>
+          <div class="fn" style="margin-top:6px">Typhoons within 300 km of one point in Ibaraki (35.9N 140.2E), July-October, 113 typhoons. Temperature from NASA POWER. <b>Only the early variety reduced the overlap.</b></div>
+        </div>
+      </div>
+      <div class="box f1">
+        <h3>SAME NUMBERS AS A CHART</h3>
+        <div class="b" style="padding:8px 12px;text-align:center"><img src="img/chart_planting.png" style="height:405px;width:auto;margin:0 auto" alt="Planting bars"></div>
+      </div>
+    </div>
+    <div class="col f1">
+      <div class="box">
+        <h3>CAVEATS: TREAT AS AN ESTIMATE ONLY</h3>
+        <div class="b" style="font-size:23px"><ul>
+          <li>Heading estimated from <b>temperature only</b> (day length ignored).</li>
+          <li><b>One location</b>.</li>
+          <li>Counts <b>overlaps, not damage</b>.</li>
+          <li>No yield, quality or workload comparison.</li>
+          <li>Options <b>within rice</b>, not a full crop rotation.</li>
+        </ul></div>
+      </div>
+      <div class="box">
+        <h3>EL NINO / LA NINA</h3>
+        <div class="b" style="font-size:23px">No relationship with the number of typhoons meeting the lodging-risk conditions (1981-2026): Spearman p = 0.35 (spring), p = 0.70 (summer). ENSO gave no guide for planting choices.</div>
+      </div>
+      <div class="box f1">
+        <h3>REUSABLE METHOD</h3>
+        <div class="b" style="font-size:23px">
+          <ol style="padding-left:26px">
+            <li>Take an <b>official damage record</b></li>
+            <li><b>Test</b> NASA-derived variables</li>
+            <li><b>Choose</b> by leaving one event out</li>
+            <li>Keep a <b>light model</b></li>
+          </ol>
+          <div style="margin-top:6px">&rarr; Other regions, crops (wheat, soybean, fruit) and hazards. <span class="red">Not yet tested.</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><div class="src">Sources: results/planting_report.txt and results/planting_strategies.csv (section A, NASA POWER T2M 1981-2025, heading thresholds from accumulated temperature); results/enso_report.txt (ONI vs typhoon counts; Bonferroni level 0.0125). Field Shift challenge text on crop options.</div><div class="pg">Team Windfall Rice | NASA Space Apps Challenge 2026 | Field Shift<br><b>5 / 7</b></div></div>
+</section>
+
+<!-- ============ SLIDE 6 ============ -->
+<section class="slide" id="s6">
+  <div class="head"><h1>Runs anywhere: implementation and demo</h1><div class="km">The whole decision is a few numbers: it <b>runs offline on a US$5 microcontroller</b>.</div></div>
+  <div class="cols">
+    <div class="col" style="width:760px">
+      <div class="box">
+        <h3>RASPBERRY PI PICO H: LED ON = &ldquo;HARVEST NOW&rdquo;</h3>
+        <div class="b" style="padding:8px"><img src="img/pico.jpg" style="width:100%" alt="Pico board with LED lit"></div>
+      </div>
+      <div class="box f1">
+        <h3>BROWSER DEMO (UI IN JAPANESE)</h3>
+        <div class="b" style="padding:8px"><img src="img/demo.png" style="width:100%" alt="Browser demo screenshot"></div>
+      </div>
+    </div>
+    <div class="col" style="width:500px">
+      <div class="box">
+        <h3>SPEED AND AGREEMENT</h3>
+        <div class="b" style="padding:6px 10px">
+          <table>
+            <tr><td>PC, one decision</td><td class="n red">~2 &micro;s</td></tr>
+            <tr><td>Pico H (RP2040, 264 KB RAM, ~US$5, MicroPython)</td><td class="n red">0.6-1.2 ms</td></tr>
+            <tr><td>Pico vs PC, 23 past typhoons</td><td class="n red">23 / 23 same</td></tr>
+            <tr><td>Browser demo vs Python</td><td class="n red">33 / 33 match</td></tr>
+          </table>
+        </div>
+      </div>
+      <div class="box">
+        <h3>INPUT: ONE LINE, ABOUT 20 BYTES</h3>
+        <div class="b" style="font-size:20px">
+          <div class="sm" style="font-size:17px">pref, past rain, forecast rain, wind, accumulated temperature</div>
+          <div style="margin:8px 0 4px"><code>茨城,0,40,10,750</code></div>
+          <div>&rarr; <b class="red">harvest now</b>, prob 20.1% vs threshold 16.7%</div>
+          <div style="margin:10px 0 4px"><code>茨城,0,20,10,750</code></div>
+          <div>&rarr; <b>safe to wait</b>, prob 10.2%</div>
+          <div class="fn" style="margin-top:12px;font-size:16px">Today the line is sent over USB from a web page (Web Serial). In the field it would come from a forecast feed.</div>
+        </div>
+      </div>
+      <div class="box f1">
+        <h3>HOW ONE DECISION IS MADE</h3>
+        <div class="b" style="font-size:20px">
+          <ol style="padding-left:26px">
+            <li>Read the one-line input</li>
+            <li>Weighted sum of rain, wind and a prefecture term (logistic regression), plus the local ripeness term for Ibaraki / Chiba</li>
+            <li>Compare the probability with the threshold (16.7% for Ibaraki / Chiba)</li>
+            <li>Above: <b class="red">harvest now</b>. Below: <b>safe to wait</b></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="col f1">
+      <div class="box">
+        <h3>NO SCREEN? NO CLOUD?</h3>
+        <div class="b" style="font-size:22px"><ul>
+          <li>The board button runs <b>built-in scenarios</b>; the LED shows the decision.</li>
+          <li><b>No cloud, no vendor lock-in:</b> coefficients are plain numbers anyone can copy.</li>
+          <li>Single-file browser demo works offline.</li>
+        </ul></div>
+      </div>
+      <div class="box">
+        <h3>FILES</h3>
+        <div class="b" style="font-size:19px;line-height:1.5">
+          deliverable/model/decide.py<br>deliverable/pico/demo_main.py<br>deliverable/demo/pico.html
+        </div>
+      </div>
+      <div class="box f1">
+        <h3>TRY IT</h3>
+        <div class="b" style="font-size:20px">
+          <div style="margin-bottom:8px"><b>Demo video:</b><br><span class="red">[DEMO_VIDEO_URL]</span></div>
+          <div><b>Code &amp; data:</b><br>github.com/souma-hub/<br>nasa-space-apps-2026</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><div class="src">Sources: docs/submission/project-page-en.md (&ldquo;Runs anywhere&rdquo;); deliverable/model/decide.py output for both example lines (checked); Pico timing and 23/23 agreement from docs/pico.md; PC timing measured by the team; 33/33 from check_demo.py. Photo and screenshot by the team.</div><div class="pg">Team Windfall Rice | NASA Space Apps Challenge 2026 | Field Shift<br><b>6 / 7</b></div></div>
+</section>
+
+<!-- ============ SLIDE 7 ============ -->
+<section class="slide" id="s7">
+  <div class="head"><h1>Limitations, next steps, use of SI, credits</h1><div class="km">We report what does not work, and what we could <b>not</b> yet check.</div></div>
+  <div class="cols">
+    <div class="col" style="width:600px">
+      <div class="box f1">
+        <h3>LIMITATIONS</h3>
+        <div class="b" style="font-size:23px"><ul>
+          <li>Reference is <b>prefecture level</b> (Ibaraki + Chiba), not individual fields.</li>
+          <li><b>Only 23 typhoons</b>; one typhoon changes the picture.</li>
+          <li>NASA grid wind (~50 km) can miss gusts of small, strong typhoons (2019 Boso).</li>
+          <li>Reference is total wind and flood damage to paddy rice, <b>not lodging alone</b>.</li>
+          <li>We confirmed the model <b>runs on GEOS-FP forecast data</b>, but could <b>not validate decisions against real archived forecasts</b> (only ~2 weeks of past forecasts are kept). Forecast error is checked only by a sensitivity test.</li>
+          <li>Threshold tuned on past data: &ldquo;10 of 16&rdquo; is a past result, not a promise.</li>
+          <li>Soil health, water use and crop combinations are not handled.</li>
+        </ul></div>
+      </div>
+    </div>
+    <div class="col" style="width:600px">
+      <div class="box">
+        <h3>WHAT WE TRIED THAT DID NOT WORK</h3>
+        <div class="b" style="font-size:22px"><ul>
+          <li><b>Sentinel-1 radar</b> (ESA): change vs lodging, correlation ~0.05.</li>
+          <li><b>Field polygons</b> did not help.</li>
+          <li><b>POWER wind</b> missed Kanto gusts.</li>
+          <li><b>ENSO</b>: no relation.</li>
+        </ul></div>
+      </div>
+      <div class="box">
+        <h3>NEXT STEPS</h3>
+        <div class="b" style="font-size:22px"><ul>
+          <li>Field-level damage records with <b>farmers and cooperatives</b>.</li>
+          <li><b>Validate on archived forecasts</b> going forward.</li>
+          <li><b>Other regions and crops.</b></li>
+        </ul>
+        <div style="font-size:18px;color:#444">Recording predictions and outcomes could later inform planting dates, varieties and rotation. This is our direction, not something we built.</div></div>
+      </div>
+      <div class="box f1">
+        <h3>STATUS: CHECKED VS NOT YET CHECKED</h3>
+        <div class="b" style="padding:6px 10px"><table>
+          <tr><td>Runs on GEOS-FP forecast data</td><td class="n" style="color:#1d2a44"><b>Confirmed</b></td></tr>
+          <tr><td>Pico decisions = PC decisions</td><td class="n"><b>23 / 23</b></td></tr>
+          <tr><td>Forecast error</td><td class="n red">Sensitivity test only</td></tr>
+          <tr><td>Archived-forecast validation</td><td class="n red">Not done</td></tr>
+          <tr><td>Other regions / crops</td><td class="n red">Not tested</td></tr>
+        </table></div>
+      </div>
+    </div>
+    <div class="col f1">
+      <div class="box">
+        <h3>USE OF SUPER INTELLIGENCE (SI)</h3>
+        <div class="b" style="font-size:22px">
+          <b>Anthropic Claude (Claude Code)</b> was used for code, data processing, analysis, and drafting documents and slides. The idea, direction and decisions came from the team. The demo video voice is <b>AI-generated text-to-speech</b>. <b>No generated images</b>; photos are by the team.
+        </div>
+      </div>
+      <div class="box f1">
+        <h3>CREDITS</h3>
+        <div class="b" style="font-size:19px;line-height:1.35;overflow-wrap:anywhere"><ul style="padding-left:20px">
+          <li>NASA GPM IMERG; NASA POWER; NASA GEOS-FP (GMAO)</li>
+          <li>JMA RSMC Tokyo Best Track; JMA AMeDAS</li>
+          <li>MAFF disaster statistics (e-Stat)</li>
+          <li>ESA Sentinel-1 via Microsoft Planetary Computer</li>
+          <li>Chiba Pref. harvest guidance: pref.chiba.lg.jp/ninaite/gijyututaisaku/documents/240718harvest.pdf</li>
+          <li>Ibaraki Pref.: pref.ibaraki.jp/nourinsuisan/ounourin/keiei/fukyuuhp/documents/240820seiikujouhou05.pdf</li>
+          <li>NOAA CPC Oceanic Nino Index (ENSO test)</li>
+        </ul></div>
+      </div>
+      <div class="box">
+        <h3>LINKS</h3>
+        <div class="b" style="font-size:20px;padding:8px 14px"><b>Demo video:</b> <span class="red">[DEMO_VIDEO_URL]</span><br><b>Code &amp; data:</b> https://github.com/souma-hub/nasa-space-apps-2026</div>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><div class="src">Sources: docs/submission/project-page-en.md (Sections 4, 5, 7), amended for the GEOS-FP statement; results/enso_report.txt. Demo video: [DEMO_VIDEO_URL] | Code &amp; data: https://github.com/souma-hub/nasa-space-apps-2026</div><div class="pg">Team Windfall Rice | NASA Space Apps Challenge 2026 | Field Shift<br><b>7 / 7</b></div></div>
+</section>
+
+<script>
+(function () {
+  var m = /[?&]s=(\d+)/.exec(location.search);
+  if (m) {
+    document.body.className = "single";
+    var el = document.getElementById("s" + m[1]);
+    if (el) el.className += " show";
+  }
+  if (/[?&]check=1/.test(location.search)) {
+    var out = [];
+    document.querySelectorAll(".box, .b, .head, .foot .src, .card, .kpi").forEach(function (e) {
+      if (e.scrollHeight > e.clientHeight + 1 || e.scrollWidth > e.clientWidth + 1) {
+        var s = e.closest(".slide"); out.push((s ? s.id : "?") + ":" + e.className + ":" + (e.textContent || "").trim().slice(0, 30));
+      }
+    });
+    var p = document.createElement("pre"); p.style.cssText = "position:fixed;top:0;left:0;background:#fff;z-index:9;font-size:14px;white-space:pre-wrap;width:1900px";
+    p.textContent = "OVERFLOW " + out.length + "\n" + out.join("\n"); document.body.appendChild(p);
+  }
+})();
+</script>
+</body>
+</html>
