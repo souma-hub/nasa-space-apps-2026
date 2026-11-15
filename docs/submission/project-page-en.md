@@ -25,8 +25,8 @@ When a typhoon is forecast, many rice farmers in Japan harvest early, sometimes 
 
 ## 3. Link to Project Demo / Link to Final Project
 
-- Project demo (30-second video): [TBD: YouTube link]
-- Final project (public repository): [TBD: public repo link]
+- Project demo (7-slide deck, PDF): https://github.com/souma-hub/nasa-space-apps-2026/blob/main/deliverable/slides/windfall-rice-slides.pdf
+- Final project (public repository): https://github.com/souma-hub/nasa-space-apps-2026
 
 ---
 

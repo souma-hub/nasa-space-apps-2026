@@ -68,11 +68,11 @@ body.single .slide.show { display: block }
         <h3>EXECUTIVE SUMMARY</h3>
         <div class="b" style="font-size:26px;padding-top:16px">
           <ul style="padding-left:28px">
-            <li style="margin-bottom:12px"><b>Problem.</b> At every typhoon forecast, many farmers harvest early, often before the grain is ripe, because there is no clear rule for when it is safe to wait.</li>
+            <li style="margin-bottom:12px"><b>Problem.</b> At every typhoon forecast, the farmers we talked to harvest early, often before the grain is ripe, because there is no clear rule for when it is safe to wait.</li>
             <li style="margin-bottom:12px"><b>What we built.</b> One logistic model using NASA GPM IMERG rain, NASA POWER wind and temperature, and GEOS-FP forecasts, checked against official MAFF damage records. Output: &ldquo;harvest now&rdquo; or &ldquo;safe to wait&rdquo;.</li>
             <li style="margin-bottom:12px"><b>Result.</b> Leaving one typhoon out at a time, on 23 typhoons in Ibaraki &amp; Chiba: <span class="red">&ldquo;safe to wait&rdquo; in 10 of 16</span> no-damage typhoons; <span class="red">missed 1 of 7</span> damaging ones.</li>
             <li style="margin-bottom:12px"><b>Runs anywhere.</b> One decision takes about 1 ms on a US$5 Raspberry Pi Pico H; no cloud needed.</li>
-            <li style="margin-bottom:12px"><b>Decision support, not a replacement</b> for farmer judgment. The method is reusable for any region or crop with NASA data and a record of past damage.</li>
+            <li style="margin-bottom:12px"><b>Decision support, not a replacement</b> for farmer judgment. The method is designed to be reusable for any region or crop with NASA data and a record of past damage.</li>
           </ul>
         </div>
       </div>
@@ -118,7 +118,7 @@ body.single .slide.show { display: block }
           <div class="b">
             <div style="margin-bottom:6px"><span class="sq d"></span><span class="sq d"></span><span class="sq d"></span><span class="sq d"></span><span class="sq d"></span><span class="sq d"></span><span class="sq d"></span><span class="sq"></span><span class="sq"></span><span class="sq"></span><span class="sq"></span><span class="sq"></span><span class="sq"></span><span class="sq"></span><span class="sq"></span><span class="sq"></span><span class="sq"></span><span class="sq"></span><span class="sq"></span><span class="sq"></span><span class="sq"></span><span class="sq"></span><span class="sq"></span></div>
             <div style="font-size:20px"><span class="red">7</span> caused paddy damage &ge;100 ha in Ibaraki + Chiba (MAFF); <b>16</b> did not.</div>
-            <div style="font-size:20px;margin-top:6px">Harvesting at every warning = <span class="red">16 unnecessary early harvests</span>.</div>
+            <div style="font-size:20px;margin-top:6px">Harvesting at every warning = <span class="red">up to 16 possibly unnecessary early harvests</span>.</div>
             <div class="fn" style="margin-top:6px">Typhoons passing within 300 km of southern Kanto.</div>
           </div>
         </div>
@@ -274,6 +274,7 @@ body.single .slide.show { display: block }
           </table>
           <div style="font-size:19px;margin:4px 0 6px">Fisher exact <span class="red">p = 0.045</span></div>
           <img src="img/chart_loo.png" style="width:100%" alt="LOO probabilities">
+          <div class="fn" style="margin-top:0;font-size:15px;line-height:1.25">Line = final-model threshold; in leave-one-out it is refit each round.</div>
         </div>
       </div>
       <div class="box f1">
@@ -281,7 +282,7 @@ body.single .slide.show { display: block }
         <div class="b" style="font-size:24px">
           <ul>
             <li><b>Permutation test</b> (10,000 label shuffles): <span class="red">p = 0.0234</span> for the count criterion, <span class="red">p = 0.0036</span> for AUC.</li>
-            <li><b>Negative control</b> (weather from a different typhoon, 1,000 runs): agreement falls from 17/23 to <span class="red">11.6/23</span>; misses rise from 0 to <span class="red">2.7</span> on average.</li>
+            <li><b>Negative control</b> (in-sample model; weather from a different typhoon, 1,000 runs): agreement falls from 17/23 to <span class="red">11.6/23</span>; misses rise from 0 to <span class="red">2.7</span> on average.</li>
             <li><b>Across Japan</b>, leave-one-typhoon-out AUC rises from <b>0.82</b> (rain only) to <span class="red">0.88</span> (rain + wind).</li>
           </ul>
         </div>
@@ -419,6 +420,7 @@ body.single .slide.show { display: block }
           <li>Counts <b>overlaps, not damage</b>.</li>
           <li>No yield, quality or workload comparison.</li>
           <li>Options <b>within rice</b>, not a full crop rotation.</li>
+          <li>Early variety: overlaps <b>before the best harvest window</b> do not fall (19 &rarr; 20).</li>
         </ul></div>
       </div>
       <div class="box">
