@@ -13,7 +13,6 @@ The decision is decision support only. It works at prefecture level, not at fiel
 - `pico/` - MicroPython programs for Raspberry Pi Pico.
   - `demo_main.py` - the stand-alone demo program (use this one).
   - `main.py` - an earlier version with the same model.
-  - `backup_main.py` - an old backup (not tracked by git).
 - `model/` - The model without any hardware.
   - `unified_model.json` - the coefficients.
   - `decide.py` - a stand-alone Python decision function and CLI (standard library only).
